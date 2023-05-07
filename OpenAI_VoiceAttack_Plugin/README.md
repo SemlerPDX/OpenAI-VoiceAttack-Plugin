@@ -41,47 +41,47 @@ This plugin also features OpenAI Moderation to review provided input and return 
 
 # Table of Contents
 
-- [Getting Started](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Getting-Started)
-  - [Download the Plugin](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Download-the-Plugin)
-  - [Install the Plugin](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Install-the-Plugin)
-    - [New Installation](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#New-Installation)
-    - [Update Installation](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Update-Installation)
-  - [Enable Plugin Support](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Enable-Plugin-Support)
-  - [Enter your OpenAI API Key](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Enter-your-Openai-Api-Key)
-  - [Uninstall the Plugin](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Uninstall-the-Plugin)
-- [Using the Plugin](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Using-the-Plugin)
-  - [Included Sample Profile](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Included-Sample-Profile)
-  - [Profile Commands Explained](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Profile-Commands-Explained)
-- [Creating Profiles using OpenAI Plugin](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Creating-Profiles-Using-Openai-Plugin)
-  - [Building Personal Profiles](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Building-Personal-Profiles)
-  - [Building Public Profiles](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Building-Public-Profiles)
-- [Troubleshooting](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Troubleshooting)
-  - [When Things Catch Fire](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#When-Things-Catch-Fire)
-  - [Understanding Error Logs](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Understanding-Error-Logs)
-  - [Additional Help](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Additional-Help)
-- [All VoiceAttack Variables](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables)
-  - [Boolean 'State Changed' Variables (Special)](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#boolean-state-changed-variables-special)
-  - [Boolean Variables](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#boolean-variables)
-  - [Decimal Variables](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#decimal-variables)
-  - [Integer Variables](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#integer-variables)
-  - [Text Variables](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#text-variables)
-  - [Text-to-Speech Variables (Special)](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#text-to-speech-variables-special)
-- [OpenAI Models List](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/OpenAI-Models-List)
-  - [Completion Models](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/OpenAI-Models-List#completion-models)
-  - [ChatGPT Models](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/OpenAI-Models-List#chatgpt-models)
-- [Plugin Context](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context)
-  - [KeyForm](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context#key-form-menu)
-  - [Completion](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context#text-completion)
-  - [ChatGPT](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context#chatgpt-request)
-  - [ChatGPT.Raw](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context#raw-chatgpt-request)
-  - [Whisper](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context#whisper-audio-processing)
-  - [DallE](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context#dall-e-image-request)
-  - [Moderation](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context#moderation-request)
-  - [File](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context#file-request)
-  - [Embedding](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context#embedding-request)
-- [Plugin Context Flow Charts](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context-Flow-Charts)
-  - [ChatGPT Main Flow](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context-Flow-Charts#chatgpt-main-flow)
-  - [ChatGPT.Raw Flow](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context-Flow-Charts#chatgptraw-flow)
+- [Getting Started](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Getting-Started)
+  - [Download the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Download-the-Plugin)
+  - [Install the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Install-the-Plugin)
+    - [New Installation](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#New-Installation)
+    - [Update Installation](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Update-Installation)
+  - [Enable Plugin Support](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Enable-Plugin-Support)
+  - [Enter your OpenAI API Key](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Enter-your-Openai-Api-Key)
+  - [Uninstall the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Uninstall-the-Plugin)
+- [Using the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Using-the-Plugin)
+  - [Included Sample Profile](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Included-Sample-Profile)
+  - [Profile Commands Explained](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Profile-Commands-Explained)
+- [Creating Profiles using OpenAI Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Creating-Profiles-Using-Openai-Plugin)
+  - [Building Personal Profiles](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Building-Personal-Profiles)
+  - [Building Public Profiles](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Building-Public-Profiles)
+- [Troubleshooting](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Troubleshooting)
+  - [When Things Catch Fire](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#When-Things-Catch-Fire)
+  - [Understanding Error Logs](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Understanding-Error-Logs)
+  - [Additional Help](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Additional-Help)
+- [All VoiceAttack Variables](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables)
+  - [Boolean 'State Changed' Variables (Special)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#boolean-state-changed-variables-special)
+  - [Boolean Variables](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#boolean-variables)
+  - [Decimal Variables](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#decimal-variables)
+  - [Integer Variables](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#integer-variables)
+  - [Text Variables](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#text-variables)
+  - [Text-to-Speech Variables (Special)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#text-to-speech-variables-special)
+- [OpenAI Models List](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/OpenAI-Models-List)
+  - [Completion Models](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/OpenAI-Models-List#completion-models)
+  - [ChatGPT Models](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/OpenAI-Models-List#chatgpt-models)
+- [Plugin Context](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context)
+  - [KeyForm](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context#key-form-menu)
+  - [Completion](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context#text-completion)
+  - [ChatGPT](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context#chatgpt-request)
+  - [ChatGPT.Raw](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context#raw-chatgpt-request)
+  - [Whisper](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context#whisper-audio-processing)
+  - [DallE](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context#dall-e-image-request)
+  - [Moderation](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context#moderation-request)
+  - [File](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context#file-request)
+  - [Embedding](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context#embedding-request)
+- [Plugin Context Flow Charts](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context-Flow-Charts)
+  - [ChatGPT Main Flow](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context-Flow-Charts#chatgpt-main-flow)
+  - [ChatGPT.Raw Flow](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context-Flow-Charts#chatgptraw-flow)
 <br />
 
 
@@ -89,7 +89,7 @@ This plugin also features OpenAI Moderation to review provided input and return 
 
 # Getting Started
 
-The OpenAI API Plugin for VoiceAttack will require any profile using it to have at least two special commands which the plugin uses for playing sounds or speaking phrases using text-to-speech. An exception to this would be a profile which DOES NOT use the `ChatGPT` context (with `ChatGPT.Raw` being the only exception). The `ChatGPT` context will require a Speech command, and if supplied with sound files to play in place of certain text-to-speech (TTS) text variables, a Sound command. The name of these commands expected by the plugin are `((OpenAI Speech))` and `((OpenAI Sound))`, and these can be changed so long as the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#OpenAI_Command_Speech">`OpenAI_Command_Speech`</a> and/or <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#OpenAI_Command_Sound">`OpenAI_Command_Sound`</a> text variables are set to the custom name of these commands, and read by VoiceAttack prior to a `ChatGPT` context plugin call. The required actions of these commands are demonstrated within the included OpenAI Plugin Sample Profile for VoiceAttack, and must include logic as written - it is NOT recommended to change any of the actions in either of these commands, and merely include, copy, or import them ***as-is*** into any profile you create for public distribution or personal use which may rely upon the `ChatGPT` context.
+The OpenAI API Plugin for VoiceAttack will require any profile using it to have at least two special commands which the plugin uses for playing sounds or speaking phrases using text-to-speech. An exception to this would be a profile which DOES NOT use the `ChatGPT` context (with `ChatGPT.Raw` being the only exception). The `ChatGPT` context will require a Speech command, and if supplied with sound files to play in place of certain text-to-speech (TTS) text variables, a Sound command. The name of these commands expected by the plugin are `((OpenAI Speech))` and `((OpenAI Sound))`, and these can be changed so long as the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#OpenAI_Command_Speech">`OpenAI_Command_Speech`</a> and/or <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#OpenAI_Command_Sound">`OpenAI_Command_Sound`</a> text variables are set to the custom name of these commands, and read by VoiceAttack prior to a `ChatGPT` context plugin call. The required actions of these commands are demonstrated within the included OpenAI Plugin Sample Profile for VoiceAttack, and must include logic as written - it is NOT recommended to change any of the actions in either of these commands, and merely include, copy, or import them ***as-is*** into any profile you create for public distribution or personal use which may rely upon the `ChatGPT` context.
 <br /><br /><br />
 
 ## Download the Plugin
@@ -190,7 +190,7 @@ Luckily, the update method is the same as the installation methods - files will 
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br /><br />
 
@@ -247,7 +247,7 @@ This OpenAI Plugin Configuration folder is located in `%AppData%\OpenAI_VoiceAtt
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br />
 
@@ -255,7 +255,7 @@ This OpenAI Plugin Configuration folder is located in `%AppData%\OpenAI_VoiceAtt
 
 <br />
 
-The OpenAI Plugin for VoiceAttack operates much like any Plugin - set the Plugin Context field to the keyword of the action you want it to perform. Each OpenAI API function has different options, parameters, and a way to return a value of some kind. The `KeyForm` context brings up the key menu (pictured above). We can use these Plugin Context keywords written directly into the Plugin Action in VoiceAttack commands, or we can set a text variable to the value of a plugin context, and use it in a token such as `{TXT:OpenAI_Context}` in the Plugin Action's Context field, and/or any combination of tokens in that field as well. Full details are on the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/Plugin-Context">Plugin Context</a> page. Using any context with a blank API key will pop-up the API Key Menu.
+The OpenAI Plugin for VoiceAttack operates much like any Plugin - set the Plugin Context field to the keyword of the action you want it to perform. Each OpenAI API function has different options, parameters, and a way to return a value of some kind. The `KeyForm` context brings up the key menu (pictured above). We can use these Plugin Context keywords written directly into the Plugin Action in VoiceAttack commands, or we can set a text variable to the value of a plugin context, and use it in a token such as `{TXT:OpenAI_Context}` in the Plugin Action's Context field, and/or any combination of tokens in that field as well. Full details are on the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/Plugin-Context">Plugin Context</a> page. Using any context with a blank API key will pop-up the API Key Menu.
 
   *On first time use **only**, the OpenAI Plugin for VoiceAttack will present this pop-up, if you missed it, here it is:*
 
@@ -321,7 +321,7 @@ The `"What time is it?"` command has nothing to do with the OpenAI Plugin, and t
 
 ### Optional Profile Commands
 
-The `((OpenAI Initialize))` command is an example of how you can set certain variables each time your profile loads, and it is ***NEVER*** called by the plugin or required by any profile using OpenAI Plugin for VoiceAttack. The `((OpenAI DictationStart))` and `((OpenAI DictationStop))` commands allow you to create your own systems to handle these phases of a `ChatGPT` context plugin call, which also allows for an `((OpenAI ExternalResponder))` command which can be executed directly after OpenAI API responds and before re-entering a `WaitForProfile` phase (or the end of the plugin call, if not using a `.Session` context modifier). See more details in the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Creating-Public-Profiles">Creating Public Profiles</a> section below, incudling why these commands need their 'When I say' phrases edited if they will be used.
+The `((OpenAI Initialize))` command is an example of how you can set certain variables each time your profile loads, and it is ***NEVER*** called by the plugin or required by any profile using OpenAI Plugin for VoiceAttack. The `((OpenAI DictationStart))` and `((OpenAI DictationStop))` commands allow you to create your own systems to handle these phases of a `ChatGPT` context plugin call, which also allows for an `((OpenAI ExternalResponder))` command which can be executed directly after OpenAI API responds and before re-entering a `WaitForProfile` phase (or the end of the plugin call, if not using a `.Session` context modifier). See more details in the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Creating-Public-Profiles">Creating Public Profiles</a> section below, incudling why these commands need their 'When I say' phrases edited if they will be used.
 
 
 <br /><br />
@@ -329,7 +329,7 @@ The `((OpenAI Initialize))` command is an example of how you can set certain var
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br /><br />
 
@@ -339,21 +339,21 @@ Start by creating a new profile. Open the profile editor for this new profile, a
 
 <br />
 
-If you want to handle on your own the GetInput phase of `ChatGPT` context calls, the `((OpenAI DictationStart))` and/or `((OpenAI DictationStop))` portions of `ChatGPT` context flow, these commands would need to be renamed. By default, the plugin has an internal method essentially the same as each of these commands, but also watches for any existing commands with those names, and so they have the `"(disabled - see documentation!!)"` label added in the 'When I say' phrase to keep it from "seeing" these commands. When the plugin can see that these commands exist with those default names above (or through custom names containined in the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#OpenAI_Command_DictationStart">`OpenAI_Command_DictationStart`</a> and <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#OpenAI_Command_DictationStop">`OpenAI_Command_DictationStop`</a> text variables), it will execute those instead of its own interal processes for the same function.
+If you want to handle on your own the GetInput phase of `ChatGPT` context calls, the `((OpenAI DictationStart))` and/or `((OpenAI DictationStop))` portions of `ChatGPT` context flow, these commands would need to be renamed. By default, the plugin has an internal method essentially the same as each of these commands, but also watches for any existing commands with those names, and so they have the `"(disabled - see documentation!!)"` label added in the 'When I say' phrase to keep it from "seeing" these commands. When the plugin can see that these commands exist with those default names above (or through custom names containined in the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#OpenAI_Command_DictationStart">`OpenAI_Command_DictationStart`</a> and <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#OpenAI_Command_DictationStop">`OpenAI_Command_DictationStop`</a> text variables), it will execute those instead of its own interal processes for the same function.
 
 <br /><br />
 
 ### Debugging Profiles
 
-There are some developer commands I've included which I use for most profiles I build. First, plugin has an event handler tied to the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#OpenAI_Debugging">`OpenAI_Debugging#`</a> boolean variable, if we change it to anything on our end, it changes an internal variable watched inside the plugin to keep them in sync. This enables information printing to the VoiceAttack Event Log when something is not right, and also messages every 5 seconds in the 'GetInput' or 'WaitForProfile' phase of a `ChatGPT` context plugin call. Second, you can say, `"Check a variable value"` when using the command from the OpenAI Sample Profile, and this will allow you to choose the type and enter the name of any VoiceAttack variable to see its value written in the VoiceAttack Event Log. There is even a similar command to `"Set"` variable values, but should be used with caution, especially for `.Session` plugin context calls which are persistent and not over shortly after they begin like most plugin context calls.
+There are some developer commands I've included which I use for most profiles I build. First, plugin has an event handler tied to the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#OpenAI_Debugging">`OpenAI_Debugging#`</a> boolean variable, if we change it to anything on our end, it changes an internal variable watched inside the plugin to keep them in sync. This enables information printing to the VoiceAttack Event Log when something is not right, and also messages every 5 seconds in the 'GetInput' or 'WaitForProfile' phase of a `ChatGPT` context plugin call. Second, you can say, `"Check a variable value"` when using the command from the OpenAI Sample Profile, and this will allow you to choose the type and enter the name of any VoiceAttack variable to see its value written in the VoiceAttack Event Log. There is even a similar command to `"Set"` variable values, but should be used with caution, especially for `.Session` plugin context calls which are persistent and not over shortly after they begin like most plugin context calls.
 <br /><br />
-Finally, refer to the Plugin Context section of this Wiki to be sure you understand all of the variables that are used by that plugin context, and read about the individual variables themselves if their purpose is not apparent in the very descriptive names I use. If you need help, check out the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Troubleshooting">Troubleshooting</a> and also the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Additional-Help">Additional Help</a> sections below.
+Finally, refer to the Plugin Context section of this Wiki to be sure you understand all of the variables that are used by that plugin context, and read about the individual variables themselves if their purpose is not apparent in the very descriptive names I use. If you need help, check out the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Troubleshooting">Troubleshooting</a> and also the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Additional-Help">Additional Help</a> sections below.
 
 <br /><br />
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br />
 
@@ -362,7 +362,7 @@ Finally, refer to the Plugin Context section of this Wiki to be sure you underst
 
 When a profile is for personal use, you can pretty much do anything you want. It's your PC, it's your VoiceAttack installation, and you don't have to worry so much about how everything works. In fact, you could include the OpenAI Plugin Sample Profile commands through the Profile Options of another profile, OR set it as a Global Profile, and then make a command with the 'When I say' phrase of "Let's make an image" and the only action to execute an existing command `(by name)` of `Image Generate` (from the included/Global Sample Profile). Eazy peazy.
 
-Want to start a chat session? Make two commands with any phrases, one with the action to execute the `Start Chatting` command `(by name)` and the other one with the action to execute the `Stop Chatting` command, also `(by name)`. Maybe, `"Hey VoiceAttack"` to start, and `"Goodbye VoiceAttack"` to stop chatting. If you set the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#OpenAI_ExternalContinue">`OpenAI_ExternalContinue`</a> boolean variable to `True`, it will just enter the 'WaitForProfile' sleep mode until you start chatting again - where it will remember your last inputs and the responses to them.
+Want to start a chat session? Make two commands with any phrases, one with the action to execute the `Start Chatting` command `(by name)` and the other one with the action to execute the `Stop Chatting` command, also `(by name)`. Maybe, `"Hey VoiceAttack"` to start, and `"Goodbye VoiceAttack"` to stop chatting. If you set the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#OpenAI_ExternalContinue">`OpenAI_ExternalContinue`</a> boolean variable to `True`, it will just enter the 'WaitForProfile' sleep mode until you start chatting again - where it will remember your last inputs and the responses to them.
 
 The above ideas are just an example, it's truly best to create your own profile but you don't *HAVE* to for personal use. It is ***NEVER*** recommended to edit the OpenAI Sample Profile directly, regardless, because if you update the OpenAI Plugin for VoiceAttack to keep up with the latest version (which everyone should), the OpenAI Sample Profile ***WILL*** be overwritten with the latest version of that profile.
 
@@ -370,7 +370,7 @@ The above ideas are just an example, it's truly best to create your own profile 
 
 ### Bare Minimum Profile
 
-Create a new profile, create a voice command (for example, `"Let's make an image"`), and add the action to execute the OpenAI Plugin for VoiceAttack with the context of `DallE.Generate` - check the box to wait until the plugin completes, and then check the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#OpenAI_Response">`OpenAI_Response`</a> text variable for the response once the plugin completes.  It's just that simple for ANY of the context - if you don't set any of the options or parameter variables, defaults will be used. You just want to understand that context, and how the return may be used - in this case, it would be a single URL since we did not change the image count - if it's more than one, it will be URLs separated by a `";"` (semicolon) for easy presentation in as the available choices in a Get Choice action in a VoiceAttack command.
+Create a new profile, create a voice command (for example, `"Let's make an image"`), and add the action to execute the OpenAI Plugin for VoiceAttack with the context of `DallE.Generate` - check the box to wait until the plugin completes, and then check the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#OpenAI_Response">`OpenAI_Response`</a> text variable for the response once the plugin completes.  It's just that simple for ANY of the context - if you don't set any of the options or parameter variables, defaults will be used. You just want to understand that context, and how the return may be used - in this case, it would be a single URL since we did not change the image count - if it's more than one, it will be URLs separated by a `";"` (semicolon) for easy presentation in as the available choices in a Get Choice action in a VoiceAttack command.
 
 You could equally just import commands from the Sample Profile - say you only wanted Dall-E commands - just import those. And the example `((Image Browser))` command.  Tailor as needed, and they will work.  Same with any of the plugin context examples. You can craft your own commands, too, and execute any plugin context you want, or use the ones I have provided.
 
@@ -396,7 +396,7 @@ If you prefer, you can optionally include the commands of the OpenAI Plugin Samp
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br /><br />
 
@@ -409,7 +409,7 @@ If you prefer, you can optionally include the commands of the OpenAI Plugin Samp
  - ***ALWAYS Create a NEW profile, or import commands into your own existing public profile(s) to add true AI to them***
  - ***ALWAYS Import Commands from the OpenAI Plugin Sample Profile - at least Speech and Sound (if `ChatGPT` is used)***
  - ***Edit those commands however you see fit, in the manners this Wiki and comments describe or imply is allowable***
- - ***Read the text variable <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#openai_plugin_version">`OpenAI_Plugin_Version`</a> to ensure users have this OpenAI Plugin, and the latest version***
+ - ***Read the text variable <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#openai_plugin_version">`OpenAI_Plugin_Version`</a> to ensure users have this OpenAI Plugin, and the latest version***
  - ***Link users to the download section above for those without OpenAI Plugin, in release posts or documentation***
  - ***Refer to this Wiki and the Sample Profile for instructions, most EVERY detail is covered or cross-linked***
  - ***Refer to the VoiceAttack Manual for anything else related to profile development***
@@ -434,9 +434,9 @@ Inline with the spirit and goals of VoiceAttack itself, I would humbly ask you a
 **Simple rule: DON'T DO IT!** It is far more wise to separate the concerns of ensuring your profile users have your latest profile and the latest OpenAI Plugin for VoiceAttack than you being forced to update your profile package to keep an embedded version of this plugin in sync with the latest version. Let me deal with that burdon. A pop-up will appear whenever the plugin is loaded and it's version is outdated, offering users the ability to download and update their OpenAI Plugin for VoiceAttack on their own, and using whatever method they prefer - or even cloning this codebase and compiling it for themselves.
 <br /><br />
 
-As stated above in the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Update-Installation">Update Installation</a> section, for good reason, I did not build an auto-updater into this plugin. Therefore, you profile developers building public profiles which use the OpenAI Plugin for VoiceAttack should consider that the best way to ensure users always have OpenAI Plugin or the latest plugin version is to ***not*** physically include this plugin with your own profile download package, but have your profile check for the version text variable (below) and if not present or below the version you built for, direct users to come here and download it themselves in your profile or its documentation. The direct download links to the **Plugin Profile Packages** above will always be the latest version. Overwriting the latest version with another copy of the latest version will cause no issues at all.
+As stated above in the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Update-Installation">Update Installation</a> section, for good reason, I did not build an auto-updater into this plugin. Therefore, you profile developers building public profiles which use the OpenAI Plugin for VoiceAttack should consider that the best way to ensure users always have OpenAI Plugin or the latest plugin version is to ***not*** physically include this plugin with your own profile download package, but have your profile check for the version text variable (below) and if not present or below the version you built for, direct users to come here and download it themselves in your profile or its documentation. The direct download links to the **Plugin Profile Packages** above will always be the latest version. Overwriting the latest version with another copy of the latest version will cause no issues at all.
 
-**The current version inside the plugin can be read from the text variable:** <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#openai_plugin_version">`OpenAI_Plugin_Version`</a><br />
+**The current version inside the plugin can be read from the text variable:** <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#openai_plugin_version">`OpenAI_Plugin_Version`</a><br />
 
 **The current version of this plugin can be scraped from the following page:** <br />
 <a href="https://veterans-gaming.com/semlerpdx/vglabs/downloads/voiceattack-plugin-openai/version.html">`https://veterans-gaming.com/semlerpdx/vglabs/downloads/voiceattack-plugin-openai/version.html`</a><br />
@@ -449,19 +449,19 @@ As stated above in the <a href="https://github.com/SemlerPDX/VGLabsFoundationLit
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br />
 
 ## Troubleshooting
 
-Every function has been thoroughly tested, and most any exceptions or errors have been discovered and accounted for, with a plugin call gracefully ending and informing us of the error(s). If something goes wrong, the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#OpenAI_Errors">`OpenAI_Errors`</a> boolean variable will become `True`, and an error message will be written to the errors log located in the Plugin Configuration Folder at `%AppData%\OpenAI_VoiceAttack_Plugin\openai_errors.log`. When the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables#OpenAI_Debugging">`OpenAI_Debugging#`</a> boolean variable has been set to True, errors will also be written to the VoiceAttack Event Log. To toggle this on or off, I have included a simple command `"Toggle Chat Debugging"`. You will then see a message print out every 5 seconds when a `ChatGPT` context plugin call is in a `GetInput` phase, or in a `WaitForProfile` phase. This can be useful for testing situations which can end or not end one of these states, such as the options for the `WaitForProfile` phase to respect or not respect the `Stop All Commands` button in VoiceAttack, or the command action which does the same. I have included a utility voice command just for this, to end any running commands including any plugin calls currently active which are at a stoppable stage, just say `"Stop all commands"`.
+Every function has been thoroughly tested, and most any exceptions or errors have been discovered and accounted for, with a plugin call gracefully ending and informing us of the error(s). If something goes wrong, the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#OpenAI_Errors">`OpenAI_Errors`</a> boolean variable will become `True`, and an error message will be written to the errors log located in the Plugin Configuration Folder at `%AppData%\OpenAI_VoiceAttack_Plugin\openai_errors.log`. When the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#OpenAI_Debugging">`OpenAI_Debugging#`</a> boolean variable has been set to True, errors will also be written to the VoiceAttack Event Log. To toggle this on or off, I have included a simple command `"Toggle Chat Debugging"`. You will then see a message print out every 5 seconds when a `ChatGPT` context plugin call is in a `GetInput` phase, or in a `WaitForProfile` phase. This can be useful for testing situations which can end or not end one of these states, such as the options for the `WaitForProfile` phase to respect or not respect the `Stop All Commands` button in VoiceAttack, or the command action which does the same. I have included a utility voice command just for this, to end any running commands including any plugin calls currently active which are at a stoppable stage, just say `"Stop all commands"`.
 
 <br /><br />
 
 ## When Things Catch Fire
 
-When all else fails, just restart VoiceAttack. This will reset any Global VoiceAttack Variables used by the plugin, and of course any internal variables the plugin has set from those values. I have included a utility command I've used for a long time which can be helpful to check the current value of any VoiceAttack variable and print it out to the Event Log. Say, `"Check a Variable Value"` to open a Get Choice window which will let you select a variable type to check, and then another to enter the name of the variable. Refer to the <a href="https://github.com/SemlerPDX/VGLabsFoundationLite/wiki/All-VoiceAttack-Variables">All VoiceAttack Variables</a> page of this Wiki, and just copy/paste whatever you need to look up. You may also say the variable type in this utility command name such as, `"Check an Integer Variable Value"`. To easily set a value to a variable while you are building profiles using OpenAI Plugin or testing how it works, you can also say, `"Change a Variable Value"`, to access a similar menu to set a value to a variable - or including the variable type to set in the phrase. Use caution, but truly if something goes wrong, you can always just restart your profile (if you imported all the OpenAI Plugin Sample Profile commands), and things should return to normal. If not, create a new profile and import the commands, and copy parts of your defunct profile bit by bit until you discover what when wrong.
+When all else fails, just restart VoiceAttack. This will reset any Global VoiceAttack Variables used by the plugin, and of course any internal variables the plugin has set from those values. I have included a utility command I've used for a long time which can be helpful to check the current value of any VoiceAttack variable and print it out to the Event Log. Say, `"Check a Variable Value"` to open a Get Choice window which will let you select a variable type to check, and then another to enter the name of the variable. Refer to the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables">All VoiceAttack Variables</a> page of this Wiki, and just copy/paste whatever you need to look up. You may also say the variable type in this utility command name such as, `"Check an Integer Variable Value"`. To easily set a value to a variable while you are building profiles using OpenAI Plugin or testing how it works, you can also say, `"Change a Variable Value"`, to access a similar menu to set a value to a variable - or including the variable type to set in the phrase. Use caution, but truly if something goes wrong, you can always just restart your profile (if you imported all the OpenAI Plugin Sample Profile commands), and things should return to normal. If not, create a new profile and import the commands, and copy parts of your defunct profile bit by bit until you discover what when wrong.
 <br /><br />
 The best way to troubleshoot is to enable debugging, and call the command you have issues with. If you do not see an error, make sure you have set all of your parameter variables used by the particular Plugin Context you are working with, even if you don't want to use them (such as clearing them to `Not set`). Each possible Plugin Context is listed in this Wiki, and below it, every possible VoiceAttack variable that can be used by that plugin context call, which link to the description for that variable - hold Control and left click to open in a new tab, or press the Back button to come back after reading the variable description. There are many, but they are grouped, with similar functions similarly named, and their names are fairly descriptive, too.
 <br /><br />
@@ -490,4 +490,4 @@ I am happy to support this plugin and profile builders using it, contact me wher
 
 <br />
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/VGLabsFoundationLite/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
