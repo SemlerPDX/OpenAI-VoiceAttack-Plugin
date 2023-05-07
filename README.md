@@ -441,10 +441,6 @@ As stated above in the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-
 **The current version of this plugin can be scraped from the following page:** <br />
 <a href="https://veterans-gaming.com/semlerpdx/vglabs/downloads/voiceattack-plugin-openai/version.html">`https://veterans-gaming.com/semlerpdx/vglabs/downloads/voiceattack-plugin-openai/version.html`</a><br />
 
-
-**Checksums and other data can be parsed from this JSON database using an appName of `VoiceAttackPluginOpenAI`:** <br />
-<a href="https://veterans-gaming.com/semlerpdx/vglabs/updates/database.json">`https://veterans-gaming.com/semlerpdx/vglabs/updates/database.json`</a><br />
-
 <br />
 
 ---
