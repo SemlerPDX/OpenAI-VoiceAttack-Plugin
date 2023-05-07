@@ -96,7 +96,7 @@ The OpenAI API Plugin for VoiceAttack will require any profile using it to have 
 
 <br /><br />
 
-**Plugin Profile Package - VoiceAttack Import Method:** <a href="veterans-gaming.com/semlerpdx/vglabs/downloads/voiceattack-plugin-openai/OpenAI_API_Plugin_for_VoiceAttack.zip">OpenAI_API_Plugin_for_VoiceAttack.zip</a>
+**Plugin Profile Package - VoiceAttack Import Method:** <a href="https://veterans-gaming.com/forums/forum/357-openai-api-plugin-for-voiceattack/">OpenAI_API_Plugin_for_VoiceAttack.zip</a>
 <br /><br />
 ![Import Button in VoiceAttack](https://veterans-gaming.com/uploads/monthly_2022_06/image.png.8f6e10caa654e401501b025b90f06c06.png)
 ![Import Button in VoiceAttack](https://i.imgur.com/ysgvO4W.png)
