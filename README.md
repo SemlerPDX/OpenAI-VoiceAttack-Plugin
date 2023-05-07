@@ -112,13 +112,13 @@ The OpenAI API Plugin for VoiceAttack will require any profile using it to have 
 Checksum Date/Time: 5/7/2023 12:03:48 PM
 Package Version: 1.0.0.0
 Package Name: OpenAI_API_Plugin_for_VoiceAttack.zip
-Package Size: 6954849 (bytes) (6.63 MB)
+Package Size: 6967112 (bytes) (6.64 MB)
 
 MD5:    f8b2e5a4b08f258bd5bb434c51e0407d
-SHA1:   8efa401a78d3a621154ef98032cad5bbc48ec5d1
-SHA256: cafbc21831697280cec54e1a97ddd206700da68c20387241ebf63d1d1a276d3b
-SHA384: 5a2964fc6a21fd1137e66f58e6e354aa7abd99df3603dedeb9b12658dc36433412975038b7c1b069976848e7c535e518
-SHA512: 5ff8bc10139b7d8c1797c77e0af038d52ddc7f26ff157b3ea66fe02ea77f062c084560a44a9d0bed23716a5e90ccccfe8204dcfbdf7d796423a62a3cc6d6d9dc
+SHA1:   a23f4472d29acb9adace3697e0342c13ea794c1f
+SHA256: a6bee946b74b7b072558ca422fd5613e0d302388ef1f594e48d7c0468be056c5
+SHA384: 1d0226ac85abbf6da545166cd5746e8e01876fb03a5c8e3c88d117ee0786ee3678fdb1bcdcf3946dcfa114fc8b9d282e
+SHA512: 2ae30194ece3e96f6fe414793c83c7d93e80ae3f471341af0f589f2e752ccdcb4a0a34c2a776789e62d983f8465f5d8517d6f0df7a4169e6bb2824fbb62f991e
 ================================================
 
 ================================================
