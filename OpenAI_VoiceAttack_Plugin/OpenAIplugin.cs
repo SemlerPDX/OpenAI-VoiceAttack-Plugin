@@ -216,7 +216,7 @@ namespace OpenAI_VoiceAttack_Plugin
 
                 isFirstRun = Configuration.DeleteOldDictationAudio();
 
-                if (isFirstRun && Configuration.CheckSharedAssemblies()) { throw new Exception("Missing required shared assemblies! VoiceAttack must be restarted to load these assemblies!"); }
+                if (Configuration.CheckSharedAssemblies() && isFirstRun) { throw new Exception("Missing required shared assemblies! VoiceAttack must be restarted to load these assemblies!"); }
 
                 if (!OpenAI_PluginFirstUse)
                 {
