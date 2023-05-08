@@ -112,26 +112,26 @@ The OpenAI API Plugin for VoiceAttack will require any profile using it to have 
 Checksum Date/Time: 5/8/2023 11:21:35 AM
 Package Version: 1.1.0.0
 Package Name: OpenAI_API_Plugin_for_VoiceAttack.zip
-Package Size: 6982109 (bytes) (6.66 MB)
+Package Size: 6982143 (bytes) (6.66 MB)
 
 MD5:    f8b2e5a4b08f258bd5bb434c51e0407d
-SHA1:   f51a29d899f1415f277296934ea3c40983ff1df2
-SHA256: 568149c8bb9daf13de49435b9c4ef45bb362b1f230c2fe6b2bb5bdc5394f1ad5
-SHA384: 6299bef651ba5130617a0799e77108621c187d24643cacc98f013196a79b968a4567909cfa90e29c88abbd6fda6e0bb3
-SHA512: a9a3cd892334253eef53e26ba8764d04fe498d5ebf4d479b50d6d7e859f595260f7e7f8721142b3e21737e3dacc342638ce1faa17b6239dc3b5141864390f381
+SHA1:   0ed4f218bfbbef332c309cb881cd7147374023e5
+SHA256: c138044b106e26078f3931e5995befca8a74d5bce78727090530a17dabcad40d
+SHA384: 57bab3c0dbba93b51f8886e86630da9b526508b74d3b5bc110de07aa8dbd544df48ab775f4e867afc964a01ff4ff8a7e
+SHA512: 83597651b03c35e64c1d350504cfc6eed11e6e560db469e460057115ee348f15714eede42eb13db92a054ab3ecd22608905a7cc0bf7f28db54db8f90bfa88820
 ================================================
 
 ================================================
 Checksum Date/Time: 5/8/2023 11:22:53 AM
 Package Version: 1.1.0.0
 Package Name: OpenAI_API_Plugin_for_VoiceAttack.vax
-Package Size: 6980028 (bytes) (6.66 MB)
+Package Size: 6980025 (bytes) (6.66 MB)
 
 MD5:    92f9ad2bb82f6b336b7930e18d350a38
-SHA1:   1840de89ece585e3c2faed021274bef49831fc77
-SHA256: c0c20ecd8b971d53089e69c0d279c410e995a7b55e71983fa0b315bf99a161d0
-SHA384: 933938475cc96ce0def1ac140dbada9039bcdaf77477ee680a6bf594d2aca19c416cb266564331fc08e21bd768c71b22
-SHA512: d1453ae844eb53443a7b8b6fc2b6373258b44b2db2f3ec3c610b7dbcca6a01e87cb85dcd6b296d53fa9168779722ab63a24a42f2a32d5003cc6273fbfcb8f45e
+SHA1:   8a76cffaa94c8120817ed50d2180db8049ba2364
+SHA256: 94affe809fdd6b84946a9c5eeb33996b2e1c2c4fbf936554e8f8087faa754da1
+SHA384: 0dd1e2059e19d6e225de3856232e172a609330289a0e8566d363147c848311cffe92578c6c306639d99b6c312f2b423e
+SHA512: 889d4dad58e7b018e24b18ea3267d217a6ccd9fcd6742cfb7185f1a5a7c120ce6439f877daa0e48d960cc43dfcfe6ba2469d381f3b4ec4436debdb363fdf8ede
 ================================================
 ```
 
