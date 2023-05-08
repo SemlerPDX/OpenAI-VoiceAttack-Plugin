@@ -122,6 +122,7 @@ namespace OpenAI_VoiceAttack_Plugin
             bool filesMoved = false;
             string[] assemblyNames = new[]
             {
+                "Microsoft.Bcl.AsyncInterfaces.dll",
                 "Microsoft.Extensions.Options.dll",
                 "Microsoft.Extensions.Http.dll",
                 "Microsoft.Extensions.Primitives.dll",

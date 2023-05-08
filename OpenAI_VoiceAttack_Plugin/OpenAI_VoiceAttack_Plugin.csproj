@@ -154,7 +154,6 @@
     <None Include="packages.config" />
     <None Include="packages.lock.json" />
     <None Include="appendix\tuning\fine-tuning-template.json" />
-    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
