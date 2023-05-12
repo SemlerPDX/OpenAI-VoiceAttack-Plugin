@@ -160,7 +160,7 @@ SHA512: 889d4dad58e7b018e24b18ea3267d217a6ccd9fcd6742cfb7185f1a5a7c120ce6439f877
 **Import the VoiceAttack Plugin Profile Package**
  1. *Set VoiceAttack to Run as Admin and Disable Plugin Support (only required for import)*
  2. *Re-Start VoiceAttack **(only if you had to perform either task above, to apply changes)***
- 3. *Press the Import Profile button, select this profile package (`OpenAI API Plugin for VoiceAttack.vax`) and import*
+ 3. *Press the Import Profile button, select this profile package (`OpenAI_API_Plugin_for_VoiceAttack.vax`) and import*
     - *Before re-enabling Plugin Support, you can import profiles which use this plugin now, such as <a href="https://veterans-gaming.com/semlerpdx/avcs/chat/">AVCS CHAT</a>*
  4. *When done importing, Re-enable Plugin Support in VoiceAttack Options*
  5. *Re-Start VoiceAttack*
