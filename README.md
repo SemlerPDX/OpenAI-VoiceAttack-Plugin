@@ -456,7 +456,7 @@ Every function has been thoroughly tested, and most any exceptions or errors hav
 
 <br /><br />
 
-## When Things Catch Fire
+### When Things Catch Fire
 
 When all else fails, just restart VoiceAttack. This will reset any Global VoiceAttack Variables used by the plugin, and of course any internal variables the plugin has set from those values. I have included a utility command I've used for a long time which can be helpful to check the current value of any VoiceAttack variable and print it out to the Event Log. Say, `"Check a Variable Value"` to open a Get Choice window which will let you select a variable type to check, and then another to enter the name of the variable. Refer to the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables">All VoiceAttack Variables</a> page of this Wiki, and just copy/paste whatever you need to look up. You may also say the variable type in this utility command name such as, `"Check an Integer Variable Value"`. To easily set a value to a variable while you are building profiles using OpenAI Plugin or testing how it works, you can also say, `"Change a Variable Value"`, to access a similar menu to set a value to a variable - or including the variable type to set in the phrase. Use caution, but truly if something goes wrong, you can always just restart your profile (if you imported all the OpenAI Plugin Sample Profile commands), and things should return to normal. If not, create a new profile and import the commands, and copy parts of your defunct profile bit by bit until you discover what when wrong.
 <br /><br />
@@ -466,7 +466,7 @@ The <a href="https://voiceattack.com/VoiceAttackHelp.pdf">VoiceAttack Manual</a>
 
 <br /><br />
 
-## Understanding Error Logs
+### Understanding Error Logs
 
 <br />
 
@@ -479,7 +479,7 @@ Each error will be preceded by a timestamp and end with a line. There may be som
 <br /><br />
 
 
-## Additional Help
+### Additional Help
 
 I am happy to support this plugin and profile builders using it, contact me wherever is most convenient! I have a support channel at <a href="https://discord.gg/xDJUjYQked">VG Discord</a>, and you can also message me on the <a href="https://veterans-gaming.com/semlerpdx/contact/">Veterans-Gaming website</a>, the <a href="https://forum.voiceattack.com/">VoiceAttack forums</a>, or anywhere you see me lurking. If I'm not super busy, I'll work with you to help or point you in the right direction at the very least.
 
