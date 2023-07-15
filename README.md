@@ -191,7 +191,7 @@ Luckily, the update method is the same as the installation methods - files will 
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br /><br />
 
@@ -248,7 +248,7 @@ This OpenAI Plugin Configuration folder is located in `%AppData%\OpenAI_VoiceAtt
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br />
 
@@ -330,7 +330,7 @@ The `((OpenAI Initialize))` command is an example of how you can set certain var
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br /><br />
 
@@ -354,7 +354,7 @@ Finally, refer to the Plugin Context section of this Wiki to be sure you underst
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br />
 
@@ -397,7 +397,7 @@ If you prefer, you can optionally include the commands of the OpenAI Plugin Samp
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br /><br />
 
@@ -446,7 +446,7 @@ As stated above in the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br />
 
@@ -487,4 +487,4 @@ I am happy to support this plugin and profile builders using it, contact me wher
 
 <br />
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
