@@ -56,7 +56,7 @@ This plugin also features OpenAI Moderation to review provided input and return 
   - [Building Personal Profiles](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Building-Personal-Profiles)
   - [Building Public Profiles](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Building-Public-Profiles)
 - [Troubleshooting](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Troubleshooting)
-  - [When Things Catch Fire](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#When-Things-Catch-Fire)
+  - [When Things Catch Fire](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#when-things-catch-fire)
   - [Understanding Error Logs](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Understanding-Error-Logs)
   - [Additional Help](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Additional-Help)
 - [All VoiceAttack Variables](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables)
