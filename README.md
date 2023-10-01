@@ -439,7 +439,7 @@ As stated above in the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-
 
 **The current version inside the plugin can be read from the text variable:** <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#openai_plugin_version">`OpenAI_Plugin_Version`</a><br />
 
-**The current version of this plugin can be scraped from the following page:** <br />
+**The current published version of this plugin can be scraped from the following page:** <br />
 <a href="https://veterans-gaming.com/semlerpdx/vglabs/downloads/voiceattack-plugin-openai/version.html">`https://veterans-gaming.com/semlerpdx/vglabs/downloads/voiceattack-plugin-openai/version.html`</a><br />
 
 <br />
