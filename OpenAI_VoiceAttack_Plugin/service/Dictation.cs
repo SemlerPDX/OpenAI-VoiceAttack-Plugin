@@ -12,6 +12,7 @@ namespace OpenAI_VoiceAttack_Plugin
     /// <summary>
     /// A class providing methods for getting and storing User Input for the <see cref="ChatGPT"/> class.
     /// </summary>
+    /// <para>
     /// <br>OpenAI API VoiceAttack Plugin</br>
     /// <br>Copyright (C) 2023 Aaron Semler</br>
     /// <br><see href="https://github.com/SemlerPDX">github.com/SemlerPDX</see></br>
