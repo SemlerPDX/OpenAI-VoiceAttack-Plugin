@@ -2,6 +2,8 @@
 using System.IO;
 using static System.Net.Mime.MediaTypeNames;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace OpenAI_VoiceAttack_Plugin
 {
@@ -29,74 +31,77 @@ namespace OpenAI_VoiceAttack_Plugin
     /// </para>
     public static class Logging
     {
-        private static readonly long LOG_MAX_BYTES = 104857600L; // 100 MB max log size
+        private static readonly int MAX_WIDTH = 91;
+        private static readonly long LOG_MAX_BYTES = 104857600L;
         private static readonly string DEFAULT_LOG_NAME = "openai_errors";
-        private static string ERROR_LOG_PATH { get; set; } = Path.Combine(
+
+        private static string ErrorLogPath { get; set; } = Path.Combine(
                                             Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments),
                                             DEFAULT_LOG_NAME + ".log");
+
+        private static int WriteLine(string line, string color, int index)
+        {
+            int length = Math.Min(MAX_WIDTH, line.Length - index);
+
+            if (length == MAX_WIDTH)
+            {
+                // Check if the line should wrap at a whitespace
+                int lastSpaceIndex = line.LastIndexOf(' ', index + length, length);
+                if (lastSpaceIndex != -1 && lastSpaceIndex != index + length)
+                {
+                    length = lastSpaceIndex - index;
+                }
+            }
+
+            OpenAI_Plugin.VA_Proxy.WriteToLog(line.Substring(index, length), color);
+            index += length;
+
+            // Ignore whitespace at the beginning of a new line
+            while (index < line.Length && char.IsWhiteSpace(line[index]))
+            {
+                index++;
+            }
+
+            return index;
+        }
+
+        private static void WriteLines(string[] lines, string color)
+        {
+            foreach (string line in lines)
+            {
+                if (line.Length <= MAX_WIDTH)
+                {
+                    OpenAI_Plugin.VA_Proxy.WriteToLog(line, color);
+                    continue;
+                }
+
+                int index = 0;
+                while (index < line.Length)
+                {
+                    index = WriteLine(line, color, index);
+                }
+            }
+        }
 
         /// <summary>
         /// A method to write very long messages to the VoiceAttack Event Log, wrapping text
         /// which exceeds the minimum width of the window to a new event log entry on a new line.
         /// </summary>
-        /// <param name="longString">The text string containing the message to write to the Event Log without truncation.</param>
-        /// <param name="colorString">The color of the square to the left of each Event Log entry.</param>
-        public static void WriteToLog_Long(string longString, string colorString)
+        /// <param name="message">The text string containing the message to write to the Event Log without truncation.</param>
+        /// <param name="color">The color of the square to the left of each Event Log entry.</param>
+        public static void WriteToLog_Long(string message, string color)
         {
             try
             {
-                int maxWidth = 91;
-                string[] lines = longString.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (string line in lines)
-                {
-                    if (line.Length <= maxWidth)
-                    {
-                        OpenAIplugin.VA_Proxy.WriteToLog(line, colorString);
-                        continue;
-                    }
-
-                    int index = 0;
-                    while (index < line.Length)
-                    {
-                        try
-                        {
-                            int length = Math.Min(maxWidth, line.Length - index);
-
-                            if (length == maxWidth)
-                            {
-                                // Check if the line should wrap at a whitespace
-                                int lastSpaceIndex = line.LastIndexOf(' ', index + length, length);
-                                if (lastSpaceIndex != -1 && lastSpaceIndex != index + length)
-                                {
-                                    length = lastSpaceIndex - index;
-                                }
-                            }
-
-                            OpenAIplugin.VA_Proxy.WriteToLog(line.Substring(index, length), colorString);
-                            index += length;
-
-                            // Ignore whitespace at the beginning of a new line
-                            while (index < line.Length && char.IsWhiteSpace(line[index]))
-                            {
-                                index++;
-                            }
-                        }
-                        catch (ArgumentOutOfRangeException)
-                        {
-                            // Catch ArgumentOutOfRangeException and continue the loop
-                            if (OpenAIplugin.DEBUG_ACTIVE == true)
-                                OpenAIplugin.VA_Proxy.WriteToLog("OpenAI Plugin Error: ArgumentOutOfRangeException caught at WriteToLog_Long() method", "red");
-
-                            continue;
-                        }
-                    }
-                }
+                string[] lines = message.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                WriteLines(lines, color);
             }
             catch
             {
-                if (OpenAIplugin.DEBUG_ACTIVE == true)
-                    OpenAIplugin.VA_Proxy.WriteToLog("OpenAI Plugin Error: Failure ignored at WriteToLog_Long() method", "red");
+                if (OpenAI_Plugin.DebugActive == true)
+                {
+                    OpenAI_Plugin.VA_Proxy.WriteToLog("OpenAI Plugin Errors: Failure ignored at WriteToLog_Long() method", "red");
+                }
             }
         }
 
@@ -105,47 +110,32 @@ namespace OpenAI_VoiceAttack_Plugin
         /// </summary>
         public static void SetErrorLogPath()
         {
-            try
+            // Uses the default CommonDocuments "public" folder if AppData Roaming config folder does not exist
+            if (Directory.Exists(Configuration.DEFAULT_CONFIG_FOLDER))
             {
-                // Use the default AppData Roaming folder with a sub-folder if an exception occurs
-                if (Directory.Exists(Configuration.DEFAULT_CONFIG_FOLDER))
-                {
-                    ERROR_LOG_PATH = Path.Combine(Configuration.DEFAULT_CONFIG_FOLDER, DEFAULT_LOG_NAME + ".log");
-                }
+                ErrorLogPath = Path.Combine(Configuration.DEFAULT_CONFIG_FOLDER, DEFAULT_LOG_NAME + ".log");
             }
-            catch (Exception ex)
-            {
-                WriteToLog_Long($"OpenAI Plugin Error: {ex.Message}", "red");
-            }
-            finally
-            {
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Plugin_ErrorsLogPath", ERROR_LOG_PATH);
-            }
+
+            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Plugin_ErrorsLogPath", ErrorLogPath);
         }
 
-        private static bool CheckAndRotateErrorsLog(string path)
+        private static void CheckAndRotateErrorsLog(string path)
         {
-            try
+            if (!File.Exists(path))
             {
-                if (File.Exists(path))
-                {
-                    FileInfo file = new FileInfo(path);
-                    if (file.Length > LOG_MAX_BYTES)
-                    {
-                        string timestamp = DateTime.Now.ToString("MMddyyyyHHmmss");
-                        string newFilePath = System.IO.Path.Combine(Configuration.DEFAULT_CONFIG_FOLDER, DEFAULT_LOG_NAME + "_" + timestamp + ".log");
-                        File.Copy(path, newFilePath);
-                        File.Delete(path);
-                    }
-                    file = null;
-                }
-                return true;
+                return;
             }
-            catch (Exception ex)
+
+            FileInfo file = new FileInfo(path);
+            if (file.Length < LOG_MAX_BYTES)
             {
-                WriteToLog_Long($"OpenAI Plugin Error: Error rotating oversized errors log: {ex.Message}", "red");
-                return false;
+                return;
             }
+
+            string timestamp = DateTime.Now.ToString("MMddyyyyHHmmss");
+            string newFilePath = System.IO.Path.Combine(Configuration.DEFAULT_CONFIG_FOLDER, DEFAULT_LOG_NAME + "_" + timestamp + ".log");
+            File.Copy(path, newFilePath);
+            File.Delete(path);
         }
 
         /// <summary>
@@ -154,30 +144,25 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <br />Default Path:
         /// <br />"%AppData%\Roaming\OpenAI_VoiceAttack_Plugin\openai_errors.log"
         /// </summary>
-        /// <param name="logMessage">The message to be appended to the log file.</param>
-        public static void WriteToLogFile(string logMessage)
+        /// <param name="message">The message to be appended to the log file.</param>
+        public static void WriteToLogFile(string message)
         {
             try
             {
-                if (CheckAndRotateErrorsLog(ERROR_LOG_PATH))
+                CheckAndRotateErrorsLog(ErrorLogPath);
+
+                using (StreamWriter writer = new StreamWriter(ErrorLogPath, true))
                 {
-                    using (StreamWriter writer = new StreamWriter(ERROR_LOG_PATH, true))
-                    {
-                        writer.WriteLine("==========================================================================");
-                        writer.WriteLine($"OpenAI Plugin Error at {DateTime.Now}:");
-                        writer.WriteLine(logMessage);
-                        writer.WriteLine("==========================================================================");
-                        writer.WriteLine(string.Empty);
-                    }
-                }
-                else
-                {
-                    throw new Exception("OpenAIplugin.Logging.CheckAndRotateErrorsLog() returned false");
+                    writer.WriteLine("==========================================================================");
+                    writer.WriteLine($"OpenAI Plugin Error at {DateTime.Now}:");
+                    writer.WriteLine(message);
+                    writer.WriteLine("==========================================================================");
+                    writer.WriteLine(string.Empty);
                 }
             }
             catch (Exception ex)
             {
-                WriteToLog_Long($"OpenAI Plugin Error: unable to write to errors log file! Log Message: {logMessage}  Failure Reason:{ex.Message}", "red");
+                WriteToLog_Long($"OpenAI Plugin Errors: unable to write to errors log file! Log Message: {message}  Failure Reason:{ex.Message}", "red");
             }
         }
 

@@ -58,12 +58,12 @@ namespace OpenAI_VoiceAttack_Plugin
             catch (Exception ex)
             {
                 Logging.WriteToLog_Long($"OpenAI Plugin Error: {ex.Message}", "red");
-                return String.Empty;
+                return string.Empty;
             }
         }
 
         /// <summary>
-        /// A very simple update check that runs one time when the plugin is loadeded by VoiceAttack in the <see cref="OpenAIplugin.VA_Init1(dynamic)"/> method..
+        /// A very simple update check that runs one time when the plugin is loadeded by VoiceAttack in the <see cref="OpenAI_Plugin.VA_Init1(dynamic)"/> method..
         /// </summary>
         /// <returns>True when update has been found, false if otherwise.</returns>
         public static bool UpdateCheck()
@@ -75,7 +75,7 @@ namespace OpenAI_VoiceAttack_Plugin
 
                 // Get latest version
                 string latestVersion = GetLatestVersion();
-                if (String.IsNullOrEmpty(latestVersion))
+                if (string.IsNullOrEmpty(latestVersion))
                 {
                     return false;
                 }
@@ -107,10 +107,10 @@ namespace OpenAI_VoiceAttack_Plugin
                 // Get current version
                 string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-                OpenAIplugin.VA_Proxy.WriteToLog("", "blank");
-                OpenAIplugin.VA_Proxy.WriteToLog($"Please update the OpenAI Plugin for VoiceAttack to v{LatestVersion}", "grey");
-                OpenAIplugin.VA_Proxy.WriteToLog($"Download here:  {PluginDownloadPage}", "grey");
-                OpenAIplugin.VA_Proxy.WriteToLog("", "blank");
+                OpenAI_Plugin.VA_Proxy.WriteToLog("", "blank");
+                OpenAI_Plugin.VA_Proxy.WriteToLog($"Please update the OpenAI Plugin for VoiceAttack to v{LatestVersion}", "grey");
+                OpenAI_Plugin.VA_Proxy.WriteToLog($"Download here:  {PluginDownloadPage}", "grey");
+                OpenAI_Plugin.VA_Proxy.WriteToLog("", "blank");
 
                 using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
                 {

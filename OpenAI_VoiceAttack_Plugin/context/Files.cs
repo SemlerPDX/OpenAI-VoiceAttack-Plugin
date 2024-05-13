@@ -44,25 +44,25 @@ namespace OpenAI_VoiceAttack_Plugin
         {
             try
             {
-                string filePath = OpenAIplugin.VA_Proxy.GetText("OpenAI_FilePath") ?? String.Empty;
-                string filePurpose = OpenAIplugin.VA_Proxy.GetText("OpenAI_FilePurpose") ?? String.Empty;
-                string successMessage = OpenAIplugin.VA_Proxy.GetText("OpenAI_TTS_UploadSuccess") ?? "The requested file has been uploaded.";
-                string failureMessage = OpenAIplugin.VA_Proxy.GetText("OpenAI_TTS_UploadFailure") ?? "The requested file was not found, or an error has occurred while uploading.";
+                string filePath = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_FilePath") ?? string.Empty;
+                string filePurpose = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_FilePurpose") ?? string.Empty;
+                string successMessage = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_TTS_UploadSuccess") ?? "The requested file has been uploaded.";
+                string failureMessage = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_TTS_UploadFailure") ?? "The requested file was not found, or an error has occurred while uploading.";
 
-                if (String.IsNullOrEmpty(filePath)) { throw new Exception("File path in OpenAI_FilePath text variable is null or empty!"); }
+                if (string.IsNullOrEmpty(filePath)) { throw new Exception("File path in OpenAI_FilePath text variable is null or empty!"); }
 
                 List<string> filesList = new List<string>();
                 string files = string.Empty;
 
-                OpenAIAPI api = OpenAI_Key.LOAD_KEY
-                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.API_KEY, OpenAI_Key.API_ORG))
+                OpenAIAPI api = OpenAI_Key.LoadKey
+                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
                     : new OpenAIAPI(APIAuthentication.LoadFromPath(
-                        directory: OpenAI_Key.DEFAULT_KEY_FILEFOLDER,
-                        filename: OpenAI_Key.DEFAULT_KEY_FILENAME,
+                        directory: OpenAI_Key.DefaultKeyFileFolder,
+                        filename: OpenAI_Key.DefaultKeyFilename,
                         searchUp: true
                 ));
 
-                var response = String.IsNullOrEmpty(filePurpose)
+                var response = string.IsNullOrEmpty(filePurpose)
                     ? await api.Files.UploadFileAsync(filePath)
                     : await api.Files.UploadFileAsync(filePath, filePurpose);
 
@@ -70,9 +70,9 @@ namespace OpenAI_VoiceAttack_Plugin
                     ? successMessage
                     : failureMessage;
 
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_TTS_Response", message);
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", response.Id ?? String.Empty);
-                OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_Error", response == null);
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_TTS_Response", message);
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response.Id ?? string.Empty);
+                OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_Error", response == null);
             }
             catch (HttpRequestException ex)
             {
@@ -95,15 +95,15 @@ namespace OpenAI_VoiceAttack_Plugin
             try
             {
                 List<string> filesList = new List<string>();
-                string files = String.Empty;
-                string successMessage = OpenAIplugin.VA_Proxy.GetText("OpenAI_TTS_ListSuccess") ?? "The list of files has been assembled.";
-                string failureMessage = OpenAIplugin.VA_Proxy.GetText("OpenAI_TTS_ListFailure") ?? "There are no files found in this account.";
+                string files = string.Empty;
+                string successMessage = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_TTS_ListSuccess") ?? "The list of files has been assembled.";
+                string failureMessage = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_TTS_ListFailure") ?? "There are no files found in this account.";
 
-                OpenAIAPI api = OpenAI_Key.LOAD_KEY
-                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.API_KEY, OpenAI_Key.API_ORG))
+                OpenAIAPI api = OpenAI_Key.LoadKey
+                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
                     : new OpenAIAPI(APIAuthentication.LoadFromPath(
-                        directory: OpenAI_Key.DEFAULT_KEY_FILEFOLDER,
-                        filename: OpenAI_Key.DEFAULT_KEY_FILENAME,
+                        directory: OpenAI_Key.DefaultKeyFileFolder,
+                        filename: OpenAI_Key.DefaultKeyFilename,
                         searchUp: true
                 ));
 
@@ -119,13 +119,13 @@ namespace OpenAI_VoiceAttack_Plugin
                     files = string.Join(";", filesList);
                 }
 
-                string message = !String.IsNullOrEmpty(files)
+                string message = !string.IsNullOrEmpty(files)
                     ? successMessage
                     : failureMessage;
 
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_TTS_Response", message);
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", files);
-                OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_Error", String.IsNullOrEmpty(files));
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_TTS_Response", message);
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", files);
+                OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_Error", string.IsNullOrEmpty(files));
             }
             catch (HttpRequestException ex)
             {
@@ -148,18 +148,18 @@ namespace OpenAI_VoiceAttack_Plugin
         {
             try
             {
-                string successMessage = OpenAIplugin.VA_Proxy.GetText("OpenAI_TTS_DeleteSuccess") ?? "The requested file has been deleted.";
-                string failureMessage = OpenAIplugin.VA_Proxy.GetText("OpenAI_TTS_DeleteFailure") ?? "The requested file was not found, or an error has occurred.";
+                string successMessage = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_TTS_DeleteSuccess") ?? "The requested file has been deleted.";
+                string failureMessage = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_TTS_DeleteFailure") ?? "The requested file was not found, or an error has occurred.";
                 string message = failureMessage;
-                string fileName = OpenAIplugin.VA_Proxy.GetText("OpenAI_FileName") ?? String.Empty;
+                string fileName = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_FileName") ?? string.Empty;
 
-                if (String.IsNullOrEmpty(fileName)) { throw new Exception("File name in OpenAI_FileName text variable is null or empty!"); }
+                if (string.IsNullOrEmpty(fileName)) { throw new Exception("File name in OpenAI_FileName text variable is null or empty!"); }
 
-                OpenAIAPI api = OpenAI_Key.LOAD_KEY
-                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.API_KEY, OpenAI_Key.API_ORG))
+                OpenAIAPI api = OpenAI_Key.LoadKey
+                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
                     : new OpenAIAPI(APIAuthentication.LoadFromPath(
-                        directory: OpenAI_Key.DEFAULT_KEY_FILEFOLDER,
-                        filename: OpenAI_Key.DEFAULT_KEY_FILENAME,
+                        directory: OpenAI_Key.DefaultKeyFileFolder,
+                        filename: OpenAI_Key.DefaultKeyFilename,
                         searchUp: true
                 ));
 
@@ -177,9 +177,9 @@ namespace OpenAI_VoiceAttack_Plugin
                     }
                 }
 
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_TTS_Response", message);
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", fileName);
-                OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_Error", message == failureMessage);
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_TTS_Response", message);
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", fileName);
+                OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_Error", message == failureMessage);
             }
             catch (HttpRequestException ex)
             {

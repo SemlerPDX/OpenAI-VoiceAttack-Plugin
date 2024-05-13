@@ -37,14 +37,14 @@ namespace OpenAI_VoiceAttack_Plugin
         {
             try
             {
-                string response = String.Empty;
+                string response = string.Empty;
                 List<string> args = new List<string>
                 {
                     "image.generate",
-                    OpenAI_Key.API_KEY,
-                    OpenAIplugin.VA_Proxy.GetText("OpenAI_ImagePrompt") ?? String.Empty,
-                    OpenAIplugin.VA_Proxy.GetText("OpenAI_ImageCount") ?? String.Empty,
-                    OpenAIplugin.VA_Proxy.GetText("OpenAI_ImageSize") ?? String.Empty
+                    OpenAI_Key.ApiKey,
+                    OpenAI_Plugin.VA_Proxy.GetText("OpenAI_ImagePrompt") ?? string.Empty,
+                    OpenAI_Plugin.VA_Proxy.GetText("OpenAI_ImageCount") ?? string.Empty,
+                    OpenAI_Plugin.VA_Proxy.GetText("OpenAI_ImageSize") ?? string.Empty
                 };
 
                 // Send the function request to the OpenAI_NET App
@@ -55,17 +55,17 @@ namespace OpenAI_VoiceAttack_Plugin
 
                 // Listen for the response from the OpenAI_NET App
                 string[] responses = Piping.ListenForArgsOnNamedPipe();
-                if (responses != null && !String.IsNullOrEmpty(responses[0]) && !responses[0].StartsWith("OpenAI_NET"))
+                if (responses != null && !string.IsNullOrEmpty(responses[0]) && !responses[0].StartsWith("OpenAI_NET"))
                 {
-                    response = String.Join(";", responses);
+                    response = string.Join(";", responses);
                 }
                 else
                 {
-                    OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_Error", true);
+                    OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_Error", true);
                 }
 
                 // Set the response to the VoiceAttack text variable and exit
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", response);
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
             }
             catch (Exception ex)
             {
@@ -90,21 +90,21 @@ namespace OpenAI_VoiceAttack_Plugin
         {
             try
             {
-                string response = String.Empty;
+                string response = string.Empty;
                 string imageFunction = useBytes ? "image.variation" : "image.variation.bytes";
 
-                string imagePath = OpenAIplugin.VA_Proxy.GetText("OpenAI_ImagePath") ?? String.Empty;
+                string imagePath = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_ImagePath") ?? string.Empty;
 
-                if (String.IsNullOrEmpty(imagePath)) { throw new Exception("File path in OpenAI_ImagePath text variable is null or empty!"); }
+                if (string.IsNullOrEmpty(imagePath)) { throw new Exception("File path in OpenAI_ImagePath text variable is null or empty!"); }
 
 
                 List<string> args = new List<string>
                 {
                     imageFunction,
-                    OpenAI_Key.API_KEY,
+                    OpenAI_Key.ApiKey,
                     imagePath,
-                    OpenAIplugin.VA_Proxy.GetText("OpenAI_ImageCount") ?? String.Empty,
-                    OpenAIplugin.VA_Proxy.GetText("OpenAI_ImageSize") ?? String.Empty
+                    OpenAI_Plugin.VA_Proxy.GetText("OpenAI_ImageCount") ?? string.Empty,
+                    OpenAI_Plugin.VA_Proxy.GetText("OpenAI_ImageSize") ?? string.Empty
                 };
 
                 // Send the function request to the OpenAI_NET App
@@ -115,16 +115,16 @@ namespace OpenAI_VoiceAttack_Plugin
 
                 // Listen for the response from the OpenAI_NET App
                 string[] responses = Piping.ListenForArgsOnNamedPipe();
-                if (responses != null && !String.IsNullOrEmpty(responses[0]) && !responses[0].StartsWith("OpenAI_NET"))
+                if (responses != null && !string.IsNullOrEmpty(responses[0]) && !responses[0].StartsWith("OpenAI_NET"))
                 {
-                    response = String.Join(";", responses);
+                    response = string.Join(";", responses);
                 }
                 else
                 {
-                    OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_Error", true);
+                    OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_Error", true);
                 }
 
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", response);
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
             }
             catch (Exception ex)
             {
@@ -149,24 +149,24 @@ namespace OpenAI_VoiceAttack_Plugin
         {
             try
             {
-                string response = String.Empty;
+                string response = string.Empty;
                 string imageFunction = useBytes ? "image.edit" : "image.edit.bytes";
 
-                string imagePrompt = OpenAIplugin.VA_Proxy.GetText("OpenAI_ImagePrompt") ?? String.Empty;
-                string imagePath = OpenAIplugin.VA_Proxy.GetText("OpenAI_ImagePath") ?? String.Empty;
+                string imagePrompt = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_ImagePrompt") ?? string.Empty;
+                string imagePath = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_ImagePath") ?? string.Empty;
 
-                if (String.IsNullOrEmpty(imagePrompt)) { throw new Exception("Editing instructions in OpenAI_ImagePrompt text variable is null or empty!"); }
-                if (String.IsNullOrEmpty(imagePath)) { throw new Exception("File path in OpenAI_ImagePath text variable is null or empty!"); }
+                if (string.IsNullOrEmpty(imagePrompt)) { throw new Exception("Editing instructions in OpenAI_ImagePrompt text variable is null or empty!"); }
+                if (string.IsNullOrEmpty(imagePath)) { throw new Exception("File path in OpenAI_ImagePath text variable is null or empty!"); }
 
                 List<string> args = new List<string>
                 {
                     imageFunction,
-                    OpenAI_Key.API_KEY,
+                    OpenAI_Key.ApiKey,
                     imagePrompt,
                     imagePath,
-                    OpenAIplugin.VA_Proxy.GetText("OpenAI_ImageCount") ?? String.Empty,
-                    OpenAIplugin.VA_Proxy.GetText("OpenAI_ImageSize") ?? String.Empty,
-                    OpenAIplugin.VA_Proxy.GetText("OpenAI_ImageMaskPath") ?? String.Empty
+                    OpenAI_Plugin.VA_Proxy.GetText("OpenAI_ImageCount") ?? string.Empty,
+                    OpenAI_Plugin.VA_Proxy.GetText("OpenAI_ImageSize") ?? string.Empty,
+                    OpenAI_Plugin.VA_Proxy.GetText("OpenAI_ImageMaskPath") ?? string.Empty
                 };
 
                 // Send the function request to the OpenAI_NET App
@@ -177,16 +177,16 @@ namespace OpenAI_VoiceAttack_Plugin
 
                 // Listen for the response from the OpenAI_NET App
                 string[] responses = Piping.ListenForArgsOnNamedPipe();
-                if (responses != null && !String.IsNullOrEmpty(responses[0]))
+                if (responses != null && !string.IsNullOrEmpty(responses[0]))
                 {
-                    response = String.Join(";", responses);
+                    response = string.Join(";", responses);
                 }
                 else
                 {
-                    OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_Error", true);
+                    OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_Error", true);
                 }
 
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", response);
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
             }
             catch (Exception ex)
             {

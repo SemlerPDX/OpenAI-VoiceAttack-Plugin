@@ -30,9 +30,20 @@ namespace OpenAI_VoiceAttack_Plugin
     /// </para>
     public static class Piping
     {
-        private static readonly string PipeNameTHIS = "OpenAI Plugin";
-        private static readonly string PipeNameIN = "OpenAI_Plugin_Pipe";
-        private static readonly string PipeNameOUT = "OpenAI_NET_Pipe";
+        private static readonly string PIPE_NAME_THIS = "OpenAI Plugin";
+        private static readonly string PIPE_NAME_IN = "OpenAI_Plugin_Pipe";
+        private static readonly string PIPE_NAME_OUT = "OpenAI_NET_Pipe";
+
+        private static void WriteLines(NamedPipeClientStream pipeClient, string[] args)
+        {
+            using (StreamWriter writer = new StreamWriter(pipeClient))
+            {
+                foreach (string arg in args)
+                {
+                    writer.WriteLine(arg);
+                }
+            }
+        }
 
         /// <summary>
         /// A method to pipe a function request to the OpenAI_NET application,
@@ -48,39 +59,48 @@ namespace OpenAI_VoiceAttack_Plugin
         {
             if (args == null || args.Length == 0 || args.Length < 3)
             {
-                throw new Exception($"The {PipeNameTHIS} arguments array must contain at least three elements.");
+                throw new Exception($"The {PIPE_NAME_THIS} arguments array must contain at least three elements.");
             }
 
-            try
+            foreach (string arg in args)
             {
-                // Attach the Organization ID to the args if set
-                if (!String.IsNullOrEmpty(OpenAI_Key.API_ORG))
+                if (string.IsNullOrEmpty(arg))
                 {
-                    args[1] = $"{args[1]}:{OpenAI_Key.API_ORG}";
-                }
-
-                // Send the args over the named pipe to the OpenAI_NET companion app
-                using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", PipeNameOUT, PipeDirection.Out))
-                {
-                    if (!pipeClient.IsConnected)
-                        pipeClient.Connect();
-
-                    using (StreamWriter writer = new StreamWriter(pipeClient))
-                    {
-                        foreach (string arg in args)
-                        {
-                            if (!String.IsNullOrEmpty(arg))
-                                writer.WriteLine(arg);
-                        }
-                    }
+                    throw new Exception($"The {PIPE_NAME_THIS} contains invalid arguments in array.");
                 }
             }
-            catch (Exception ex)
+
+            // Append the Organization ID to the ApiKey in args if set
+            if (!string.IsNullOrEmpty(OpenAI_Key.ApiOrg))
             {
-                if (OpenAIplugin.DEBUG_ACTIVE == true)
-                    Logging.WriteToLog_Long($"{PipeNameTHIS} Error: SendArgsToNamedPipe Exception occurred: {ex.Message}", "red");
+                args[1] = $"{args[1]}:{OpenAI_Key.ApiOrg}";
             }
+
+            using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", PIPE_NAME_OUT, PipeDirection.Out))
+            {
+                if (!pipeClient.IsConnected)
+                {
+                    pipeClient.Connect();
+                }
+
+                WriteLines(pipeClient, args);
+            }
+
             return true;
+        }
+
+        private static List<string> ReadLines(NamedPipeServerStream pipeServer, List<string> args)
+        {
+            using (StreamReader reader = new StreamReader(pipeServer))
+            {
+                string line;
+                while ((line = reader.ReadLine() ?? string.Empty) != null && !string.IsNullOrEmpty(line))
+                {
+                    args.Add(line);
+                }
+            }
+
+            return args;
         }
 
         /// <summary>
@@ -96,30 +116,12 @@ namespace OpenAI_VoiceAttack_Plugin
         public static string[] ListenForArgsOnNamedPipe()
         {
             List<string> args = new List<string>();
-            try
+
+            using (NamedPipeServerStream pipeServer = new NamedPipeServerStream(PIPE_NAME_IN, PipeDirection.In, NamedPipeServerStream.MaxAllowedServerInstances))
             {
-                // Listen for return args over the named pipe from the OpenAI_NET companion app
-                using (NamedPipeServerStream pipeServer = new NamedPipeServerStream(PipeNameIN, PipeDirection.In, NamedPipeServerStream.MaxAllowedServerInstances))
-                {
+                pipeServer.WaitForConnection();
 
-                    pipeServer.WaitForConnection();
-
-                    using (StreamReader reader = new StreamReader(pipeServer))
-                    {
-                        string line;
-                        while ((line = reader.ReadLine() ?? String.Empty) != null && !String.IsNullOrEmpty(line))
-                        {
-                            args.Add(line);
-                        }
-                    }
-
-                    pipeServer.Dispose();
-                }
-            }
-            catch (Exception ex)
-            {
-                if (OpenAIplugin.DEBUG_ACTIVE == true)
-                    Logging.WriteToLog_Long($"{PipeNameTHIS} Error: ListenForArgsOnNamedPipe Exception occurred: {ex.Message}", "red");
+                ReadLines(pipeServer, args);
             }
 
             return args.ToArray();

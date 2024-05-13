@@ -39,17 +39,17 @@ namespace OpenAI_VoiceAttack_Plugin
         /// or to the original user input (unmodified) if not flagged.</returns>
         public static async Task Explain()
         {
-            string userInput = OpenAIplugin.VA_Proxy.GetText("OpenAI_UserInput") ?? String.Empty;
-            string categoriesString = String.Empty;
-            OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", false);
+            string userInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput") ?? string.Empty;
+            string categoriesString = string.Empty;
+            OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", false);
 
-            if (!String.IsNullOrEmpty(userInput))
+            if (!string.IsNullOrEmpty(userInput))
             {
-                OpenAIAPI api = OpenAI_Key.LOAD_KEY
-                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.API_KEY, OpenAI_Key.API_ORG))
+                OpenAIAPI api = OpenAI_Key.LoadKey
+                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
                     : new OpenAIAPI(APIAuthentication.LoadFromPath(
-                        directory: OpenAI_Key.DEFAULT_KEY_FILEFOLDER,
-                        filename: OpenAI_Key.DEFAULT_KEY_FILENAME,
+                        directory: OpenAI_Key.DefaultKeyFileFolder,
+                        filename: OpenAI_Key.DefaultKeyFilename,
                         searchUp: true
                 ));
 
@@ -77,9 +77,9 @@ namespace OpenAI_VoiceAttack_Plugin
 
                 }
 
-                string response = result.Results[0].Flagged ? categoriesString : OpenAIplugin.VA_Proxy.GetText("OpenAI_UserInput");
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", response);
-                OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", result.Results[0].Flagged);
+                string response = result.Results[0].Flagged ? categoriesString : OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput");
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
+                OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", result.Results[0].Flagged);
             }
         }
 
@@ -91,17 +91,17 @@ namespace OpenAI_VoiceAttack_Plugin
         /// original user input (unmodified) if not flagged.</returns>
         public static async Task<bool> Check()
         {
-            string userInput = OpenAIplugin.VA_Proxy.GetText("OpenAI_UserInput") ?? String.Empty;
-            string flagMessage = OpenAIplugin.VA_Proxy.GetText("OpenAI_TTS_ContentFlagged") ?? "The input provided has been flagged as inappropriate.";
-            OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", false);
+            string userInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput") ?? string.Empty;
+            string flagMessage = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_TTS_ContentFlagged") ?? "The input provided has been flagged as inappropriate.";
+            OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", false);
 
-            if (!String.IsNullOrEmpty(userInput))
+            if (!string.IsNullOrEmpty(userInput))
             {
-                OpenAIAPI api = OpenAI_Key.LOAD_KEY
-                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.API_KEY, OpenAI_Key.API_ORG))
+                OpenAIAPI api = OpenAI_Key.LoadKey
+                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
                     : new OpenAIAPI(APIAuthentication.LoadFromPath(
-                        directory: OpenAI_Key.DEFAULT_KEY_FILEFOLDER,
-                        filename: OpenAI_Key.DEFAULT_KEY_FILENAME,
+                        directory: OpenAI_Key.DefaultKeyFileFolder,
+                        filename: OpenAI_Key.DefaultKeyFilename,
                         searchUp: true
                 ));
 
@@ -109,10 +109,10 @@ namespace OpenAI_VoiceAttack_Plugin
 
                 string response = result.Results[0].Flagged
                     ? flagMessage
-                    : OpenAIplugin.VA_Proxy.GetText("OpenAI_UserInput");
+                    : OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput");
 
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", response);
-                OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", result.Results[0].Flagged);
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
+                OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", result.Results[0].Flagged);
 
                 return result.Results[0].Flagged;
             }

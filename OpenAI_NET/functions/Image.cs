@@ -44,7 +44,7 @@ namespace OpenAI_NET
             try
             {
                 // Set Organization ID if contained in the API key within args
-                string argsOrg = String.Empty;
+                string argsOrg = string.Empty;
                 if (args.Length > 0)
                 {
                     if (args[1].Contains(':'))
@@ -56,7 +56,7 @@ namespace OpenAI_NET
                 }
 
                 // Set the host with or without organization id
-                using var host = String.IsNullOrEmpty(argsOrg)
+                using var host = string.IsNullOrEmpty(argsOrg)
                     ? Host.CreateDefaultBuilder(args)
                     .ConfigureServices((builder, services) =>
                     {
@@ -78,11 +78,11 @@ namespace OpenAI_NET
                     .Build();
 
                 // Set DALL-E request parameters or use defaults
-                string imagePrompt = args.Length > 2 && !String.IsNullOrEmpty(args[2]) ? args[2] : String.Empty;
-                Int32 imageCount = args.Length > 3 && !String.IsNullOrEmpty(args[3]) ? Int32.TryParse(args[3], out int count) ? count : 1 : 1;
-                string imageSize = args.Length > 4 && !String.IsNullOrEmpty(args[4]) ? args[4] : "1024x1024";
+                string imagePrompt = args.Length > 2 && !string.IsNullOrEmpty(args[2]) ? args[2] : string.Empty;
+                Int32 imageCount = args.Length > 3 && !string.IsNullOrEmpty(args[3]) ? Int32.TryParse(args[3], out int count) ? count : 1 : 1;
+                string imageSize = args.Length > 4 && !string.IsNullOrEmpty(args[4]) ? args[4] : "1024x1024";
 
-                if (String.IsNullOrEmpty(imagePrompt)) { throw new Exception("Image Generation Error: Image User Prompt is null or empty!"); }
+                if (string.IsNullOrEmpty(imagePrompt)) { throw new Exception("Image Generation Error: Image User Prompt is null or empty!"); }
 
                 if (!(imageSize == "256x256" || imageSize == "512x512" || imageSize == "1024x1024"))
                 {
@@ -156,11 +156,11 @@ namespace OpenAI_NET
                 .Build();
 
                 // Set DALL-E request parameters or use defaults
-                string imagePath = args.Length > 2 && !String.IsNullOrEmpty(args[2]) ? args[2] : String.Empty;
-                Int32 imageCount = args.Length > 3 && !String.IsNullOrEmpty(args[3]) ? Int32.TryParse(args[3], out int count) ? count : 1 : 1;
-                string imageSize = args.Length > 4 && !String.IsNullOrEmpty(args[4]) ? args[4] : "1024x1024";
+                string imagePath = args.Length > 2 && !string.IsNullOrEmpty(args[2]) ? args[2] : string.Empty;
+                Int32 imageCount = args.Length > 3 && !string.IsNullOrEmpty(args[3]) ? Int32.TryParse(args[3], out int count) ? count : 1 : 1;
+                string imageSize = args.Length > 4 && !string.IsNullOrEmpty(args[4]) ? args[4] : "1024x1024";
 
-                if (String.IsNullOrEmpty(imagePath)) { throw new Exception("Image Variation Error: File Path to Image is null or empty!"); }
+                if (string.IsNullOrEmpty(imagePath)) { throw new Exception("Image Variation Error: File Path to Image is null or empty!"); }
                 if (!(imageSize == "256x256" || imageSize == "512x512" || imageSize == "1024x1024"))
                 {
                     throw new Exception("Image Variation Error: Image size invalid!");
@@ -242,14 +242,14 @@ namespace OpenAI_NET
                 .Build();
 
                 // Set DALL-E request parameters or use defaults
-                string imagePrompt = args.Length > 2 && !String.IsNullOrEmpty(args[2]) ? args[2] : String.Empty;
-                string imagePath = args.Length > 3 && !String.IsNullOrEmpty(args[3]) ? args[3] : String.Empty;
-                Int32 imageCount = args.Length > 4 && !String.IsNullOrEmpty(args[4]) ? Int32.TryParse(args[4], out int count) ? count : 1 : 1;
-                string imageSize = args.Length > 5 && !String.IsNullOrEmpty(args[5]) ? args[5] : "1024x1024";
-                string maskPath = args.Length > 6 && !String.IsNullOrEmpty(args[6]) ? args[6] : String.Empty;
+                string imagePrompt = args.Length > 2 && !string.IsNullOrEmpty(args[2]) ? args[2] : string.Empty;
+                string imagePath = args.Length > 3 && !string.IsNullOrEmpty(args[3]) ? args[3] : string.Empty;
+                Int32 imageCount = args.Length > 4 && !string.IsNullOrEmpty(args[4]) ? Int32.TryParse(args[4], out int count) ? count : 1 : 1;
+                string imageSize = args.Length > 5 && !string.IsNullOrEmpty(args[5]) ? args[5] : "1024x1024";
+                string maskPath = args.Length > 6 && !string.IsNullOrEmpty(args[6]) ? args[6] : string.Empty;
 
-                if (String.IsNullOrEmpty(imagePrompt)) { throw new Exception("Image Edit Error: Image User Prompt is null or empty!"); }
-                if (String.IsNullOrEmpty(imagePath)) { throw new Exception("Image Edit Error: File Path to Image is null or empty!"); }
+                if (string.IsNullOrEmpty(imagePrompt)) { throw new Exception("Image Edit Error: Image User Prompt is null or empty!"); }
+                if (string.IsNullOrEmpty(imagePath)) { throw new Exception("Image Edit Error: File Path to Image is null or empty!"); }
 
 
                 if (!(imageSize == "256x256" || imageSize == "512x512" || imageSize == "1024x1024"))
@@ -264,7 +264,7 @@ namespace OpenAI_NET
                 if (openAi != null)
                 {
                     var response = useBytes
-                      ? String.IsNullOrEmpty(maskPath)
+                      ? string.IsNullOrEmpty(maskPath)
                         ? await openAi.Images.Edit(imagePrompt, File.ReadAllBytes(imagePath), o =>
                         {
                             o.N = imageCount;
@@ -275,7 +275,7 @@ namespace OpenAI_NET
                             o.N = imageCount;
                             o.Size = imageSize;
                         })
-                      : String.IsNullOrEmpty(maskPath)
+                      : string.IsNullOrEmpty(maskPath)
                         ? await openAi.Images.Edit(imagePrompt, imagePath, o =>
                         {
                             o.N = imageCount;

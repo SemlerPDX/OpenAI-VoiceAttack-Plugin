@@ -37,51 +37,17 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <exception cref="InvalidOperationException">Thrown when an error occurs in GetProcessesByName().</exception>
         public static bool IsRunningOpenAI_NET()
         {
-            string errorMessage = "OpenAI Plugin Error in IsRunningOpenAI_NET";
-            try
-            {
-                Process[] processes = Process.GetProcessesByName("OpenAI_NET");
-                return (processes.Length > 0);
-            }
-            catch (InvalidOperationException ex)
-            {
-                Logging.WriteToLog_Long($"{errorMessage}: {ex.Message}", "red");
-            }
-            catch (Exception ex)
-            {
-                Logging.WriteToLog_Long($"{errorMessage}: {ex.Message}", "red");
-            }
-            return false;
+            Process[] processes = Process.GetProcessesByName("OpenAI_NET");
+            return (processes.Length > 0);
         }
 
         /// <summary>
         /// Launch the OpenAI_NET companion app, which listens for Whisper and DALL-E requests.
         /// </summary>
-        /// <returns>True if OpenAI_NET.exe was successfully launched, false if otherwise.</returns>
-        /// <exception cref="ObjectDisposedException">Thrown when an error occurs in Start().</exception>
-        /// <exception cref="FileNotFoundException">Thrown in Start() when the OpenAI_NET.exe file doesn't exist.</exception>
-        public static bool LaunchOpenAI_NET()
+        public static void LaunchOpenAI_NET()
         {
-            string errorMessage = "OpenAI Plugin Error in LaunchOpenAI_NET";
-            try
-            {
-                string filePath = System.IO.Path.Combine(OpenAIplugin.VA_Proxy.AppsDir, @"OpenAI_Plugin\OpenAI_NET.exe");
-                Process.Start(filePath);
-                return true;
-            }
-            catch (ObjectDisposedException ex)
-            {
-                Logging.WriteToLog_Long($"{errorMessage}: {ex.Message}", "red");
-            }
-            catch (FileNotFoundException)
-            {
-                Logging.WriteToLog_Long($"{errorMessage}: Cannot locate OpenAI_NET.exe in VA Apps OpenAI Plugin folder!", "red");
-            }
-            catch (Exception ex)
-            {
-                Logging.WriteToLog_Long($"{errorMessage}:  {ex.Message}", "red");
-            }
-            return false;
+            string filePath = System.IO.Path.Combine(OpenAI_Plugin.VA_Proxy.AppsDir, @"OpenAI_Plugin\OpenAI_NET.exe");
+            Process.Start(filePath);
         }
 
         /// <summary>

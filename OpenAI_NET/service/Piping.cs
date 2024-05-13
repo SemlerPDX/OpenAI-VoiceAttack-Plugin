@@ -27,44 +27,58 @@ namespace OpenAI_NET.service
     /// </para>
     public static class Piping
     {
-        private static readonly string PipeNameTHIS = "OpenAI_NET";
-        private static readonly string PipeNameIN = "OpenAI_NET_Pipe";
-        private static readonly string PipeNameOUT = "OpenAI_Plugin_Pipe";
+        private static readonly string PIPE_NAME_THIS = "OpenAI_NET";
+        private static readonly string PIPE_NAME_IN = "OpenAI_NET_Pipe";
+        private static readonly string PIPE_NAME_OUT = "OpenAI_Plugin_Pipe";
+
+        private static void WriteLines(NamedPipeClientStream pipeClient, string[] args)
+        {
+            using (StreamWriter writer = new StreamWriter(pipeClient))
+            {
+                foreach (string arg in args)
+                {
+                    writer.WriteLine(arg);
+                }
+            }
+        }
 
         /// <summary>
         /// A method to pipe a function response to the OpenAI VoiceAttack Plugin.
         /// </summary>
         /// <param name="args">A string array containing the response of a function request.</param>
         /// <returns>True upon success, false if otherwise.</returns>
-        /// <exception cref="IOException">Thrown when an error occurs in WriteLine().</exception>
-        /// <exception cref="ObjectDisposedException">Thrown when an error occurs in WriteLine().</exception>
-        /// <exception cref="InvalidOperationException">Thrown when an error occurs in Connect().</exception>
         public static bool SendArgsToNamedPipe(string[] args)
         {
             if (args == null || args.Length == 0)
             {
-                throw new ArgumentException($"The {PipeNameTHIS} arguments array must contain at least one element.", nameof(args));
+                throw new ArgumentException($"The {PIPE_NAME_THIS} arguments array must contain at least one element.", nameof(args));
             }
 
-            try
+            using (NamedPipeClientStream pipeClient = new(".", PIPE_NAME_OUT, PipeDirection.Out))
             {
-                // Send the return args over the named pipe back to the OpenAI VoiceAttack Plugin
-                using NamedPipeClientStream pipeClient = new(".", PipeNameOUT, PipeDirection.Out);
                 if (!pipeClient.IsConnected)
-                    pipeClient.Connect();
-
-                using StreamWriter writer = new(pipeClient);
-                foreach (string arg in args)
                 {
-                    if (!String.IsNullOrEmpty(arg))
-                        writer.WriteLine(arg);
+                    pipeClient.Connect();
+                }
+
+                WriteLines(pipeClient, args);
+            }
+
+            return true;
+        }
+
+        private static List<string> ReadLines(NamedPipeServerStream pipeServer, List<string> args)
+        {
+            using (StreamReader reader = new StreamReader(pipeServer))
+            {
+                string line;
+                while ((line = reader.ReadLine() ?? string.Empty) != null && !string.IsNullOrEmpty(line))
+                {
+                    args.Add(line);
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"{PipeNameTHIS} Error: SendArgsToNamedPipe Exception occurred: {ex.Message}");
-            }
-            return true;
+
+            return args;
         }
 
         /// <summary>
@@ -72,32 +86,15 @@ namespace OpenAI_NET.service
         /// </summary>
         /// <returns>A string array starting with the desired function, followed by the OpenAI API Key,
         /// then any required parameters (see documentation).</returns>
-        /// <exception cref="OutOfMemoryException">Thrown when an error occurs in ReadLine().</exception>
-        /// <exception cref="IOException">Thrown when an error occurs in WaitForConnection() or ReadLine().</exception>
-        /// <exception cref="ObjectDisposedException">Thrown when an error occurs in WaitForConnection() or Disconnect().</exception>
-        /// <exception cref="InvalidOperationException">Thrown when an error occurs in WaitForConnection() or Disconnect().</exception>
         public static string[] ListenForArgsOnNamedPipe()
         {
-            List<string> args = new();
-            try
+            List<string> args = new List<string>();
+
+            using (NamedPipeServerStream pipeServer = new(PIPE_NAME_IN, PipeDirection.In, NamedPipeServerStream.MaxAllowedServerInstances))
             {
-                // Listen for function args over the named pipe from the OpenAI VoiceAttack Plugin
-                using NamedPipeServerStream pipeServer = new(PipeNameIN, PipeDirection.In, NamedPipeServerStream.MaxAllowedServerInstances);
                 pipeServer.WaitForConnection();
 
-                using (StreamReader reader = new(pipeServer))
-                {
-                    string? line;
-                    while ((line = reader.ReadLine()) != null && !String.IsNullOrEmpty(line))
-                    {
-                        args.Add(line);
-                    }
-                }
-                pipeServer.Dispose();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"{PipeNameTHIS} Error: ListenForArgsOnNamedPipe Exception occurred: {ex.Message}");
+                ReadLines(pipeServer, args);
             }
 
             return args.ToArray();

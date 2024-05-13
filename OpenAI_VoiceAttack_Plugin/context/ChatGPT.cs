@@ -1,5 +1,6 @@
 ﻿using OpenAI_API;
 using OpenAI_API.Chat;
+using OpenAI_API.Embedding;
 using OpenAI_API.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Shapes;
+using static OpenAI_VoiceAttack_Plugin.Embedding;
+//using static OpenAI_VoiceAttack_Plugin.Embedding;
 using static System.Windows.Forms.AxHost;
 
 namespace OpenAI_VoiceAttack_Plugin
@@ -83,10 +86,10 @@ namespace OpenAI_VoiceAttack_Plugin
         private static string GetExistingCommand(string commandVariable, string defaultCommandName, bool throwExceptions)
         {
             // Ensure this command exists in VoiceAttack profile:
-            string thisCommand = OpenAIplugin.VA_Proxy.GetText(commandVariable) ?? defaultCommandName;
-            if (!OpenAIplugin.VA_Proxy.Command.Exists(thisCommand))
+            string thisCommand = OpenAI_Plugin.VA_Proxy.GetText(commandVariable) ?? defaultCommandName;
+            if (!OpenAI_Plugin.VA_Proxy.Command.Exists(thisCommand))
             {
-                if (OpenAIplugin.VA_Proxy.Command.Exists(defaultCommandName))
+                if (OpenAI_Plugin.VA_Proxy.Command.Exists(defaultCommandName))
                 {
                     thisCommand = defaultCommandName;
                 }
@@ -115,12 +118,12 @@ namespace OpenAI_VoiceAttack_Plugin
         {
             // Optional speech/sound before capturing input through Dictation text and audio capture,
             // OR before processing chat session input through OpenAI API (which can be slow!)
-            string feedbackValue = OpenAIplugin.VA_Proxy.GetText(feedbackVariable) ?? String.Empty;
+            string feedbackValue = OpenAI_Plugin.VA_Proxy.GetText(feedbackVariable) ?? string.Empty;
             bool isAudioFile = false;
 
-            if (!String.IsNullOrEmpty(feedbackValue))
+            if (!string.IsNullOrEmpty(feedbackValue))
             {
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_TTS_Response", feedbackValue);
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_TTS_Response", feedbackValue);
 
                 try
                 {
@@ -136,11 +139,11 @@ namespace OpenAI_VoiceAttack_Plugin
 
                 if (isAudioFile)
                 {
-                    OpenAIplugin.VA_Proxy.Command.Execute(GetExistingCommand("OpenAI_Command_Sound", DEFAULT_SOUND_COMMAND), waitForComplete);
+                    OpenAI_Plugin.VA_Proxy.Command.Execute(GetExistingCommand("OpenAI_Command_Sound", DEFAULT_SOUND_COMMAND), waitForComplete);
                 }
                 else
                 {
-                    OpenAIplugin.VA_Proxy.Command.Execute(GetExistingCommand("OpenAI_Command_Speech", DEFAULT_SPEECH_COMMAND), waitForComplete);
+                    OpenAI_Plugin.VA_Proxy.Command.Execute(GetExistingCommand("OpenAI_Command_Speech", DEFAULT_SPEECH_COMMAND), waitForComplete);
                 }
             }
         }
@@ -150,14 +153,17 @@ namespace OpenAI_VoiceAttack_Plugin
         /// to be used as an External Responder command or function following a ChatGPT response.
         /// </summary>
         /// <exception cref="Exception">Thrown when told to execute a command which does not exist in the active profile or any referenced profile.</exception>
-        private static void SendToExternalCommand()
+        private static void SendToExternalCommand(bool canSend)
         {
-            // Ensure External ChatGPT Session return processing command exists in VoiceAttack profile:
-            string externalCommand = OpenAIplugin.VA_Proxy.GetText("OpenAI_Command_ExternalResponder") ?? "";
+            if (!canSend)
+                return;
 
-            if (!String.IsNullOrEmpty(externalCommand) && OpenAIplugin.VA_Proxy.Command.Exists(externalCommand))
+            // Ensure External ChatGPT Session return processing command exists in VoiceAttack profile:
+            string externalCommand = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_Command_ExternalResponder") ?? "";
+
+            if (!string.IsNullOrEmpty(externalCommand) && OpenAI_Plugin.VA_Proxy.Command.Exists(externalCommand))
             {
-                OpenAIplugin.VA_Proxy.Command.Execute(externalCommand, true); // waits here for it to complete...
+                OpenAI_Plugin.VA_Proxy.Command.Execute(externalCommand, true); // waits here for it to complete...
             }
             else
             {
@@ -171,15 +177,18 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <br /><br />
         /// This 'wait to continue' phase will naturally exit when the "OpenAI_ChatWaiting#" boolean becomes <see langword="false"/>.
         /// </summary>
-        private static void WaitForExternalContinue()
+        private static void WaitForExternalContinue(bool canWait)
         {
+            if (!canWait)
+                return;
+
             int intervalMs = 100; // 100 milliseconds seems decent enough, can change here without concern of effect below
 
-            OpenAIplugin._stopVariableToMonitor = false;
-            OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_ChatWaiting#", true);
+            OpenAI_Plugin._stopVariableToMonitor = false;
+            OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ChatWaiting#", true);
 
             // Check if wait should respect VoiceAttack stop button (inverted bool)
-            bool? allowStopExit = !OpenAIplugin.VA_Proxy.GetBoolean("OpenAI_ExternalContinue_Unstoppable") ?? null;
+            bool? allowStopExit = !OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_ExternalContinue_Unstoppable") ?? null;
             allowStopExit = allowStopExit ?? true; // default will respect the stop button and end the plugin call
 
             int index = 0;
@@ -190,22 +199,22 @@ namespace OpenAI_VoiceAttack_Plugin
 
                 // Write 'still waiting' message every 5 seconds if debugging
                 index++;
-                if (OpenAIplugin.DEBUG_ACTIVE == true && index % writeInterval == 0)
-                    OpenAIplugin.VA_Proxy.WriteToLog("OpenAI ChatGPT is still waiting for profile permission to continue...", "yellow");
+                if (OpenAI_Plugin.DebugActive == true && index % writeInterval == 0)
+                    OpenAI_Plugin.VA_Proxy.WriteToLog("OpenAI ChatGPT is still waiting for profile permission to continue...", "yellow");
 
                 // Allow for Stop Button exit
-                if (allowStopExit == true && OpenAIplugin._stopVariableToMonitor)
+                if (allowStopExit == true && OpenAI_Plugin._stopVariableToMonitor)
                     break;
             }
-            while (OpenAIplugin.CHAT_WAITING == true);
+            while (OpenAI_Plugin.ChatWaiting == true);
 
             // Reset the stop flag only for long running waits in unstoppable state
             if (allowStopExit != true)
-                OpenAIplugin._stopVariableToMonitor = false;
+                OpenAI_Plugin._stopVariableToMonitor = false;
 
             // Reset the Waiting boolean after stop exits or otherwise
-            if (OpenAIplugin.CHAT_WAITING == true)
-                OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_ChatWaiting#", false);
+            if (OpenAI_Plugin.ChatWaiting == true)
+                OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ChatWaiting#", false);
 
         }
 
@@ -214,44 +223,41 @@ namespace OpenAI_VoiceAttack_Plugin
         /// from potential text-to-speech responses.
         /// </summary>
         /// <param name="response">The ChatGPT response with any hyperlinks culled out to a separate return text variable in VoiceAttack.</param>
-        /// <returns>The input response with hyperlinks culled out.</returns>
+        /// <returns>The input response with hyperlinks culled out.<br />
+        /// Also sets the 'OpenAI_ResponseLinks' text variable to a semicolon deliniated list of any hyperlinks culled.</returns>
         private static string ParseHyperlinks(string response)
         {
-            try
-            {
-                List<string> responseBuilder = new List<string>();
-                List<string> linksBuilder = new List<string>();
+            List<string> responseBuilder = new List<string>();
+            List<string> linksBuilder = new List<string>();
 
-                // ChatGPT returns multiline responses separted by "\n" only
-                string[] responses = response.Split(new string[] { "\n" }, StringSplitOptions.None); // allow line breaks
-                foreach (string line in responses)
+            // ChatGPT returns multiline responses separted by "\n" only
+            string[] responses = response.Split(new string[] { "\n" }, StringSplitOptions.None); // we must allow line breaks
+            foreach (string line in responses)
+            {
+                string[] words = line.Split(' ');
+                string newLine = string.Empty;
+                foreach (string word in words)
                 {
-                    string[] words = line.Split(' ');
-                    string newLine = String.Empty;
-                    foreach (string word in words)
+                    if (!word.StartsWith("http") && !word.StartsWith("www"))
                     {
-                        if (!word.StartsWith("http") && !word.StartsWith("www"))
-                        {
-                            newLine += $"{word} ";
-                            continue;
-                        }
-                        // Replace this 'word' with some TTS note, else its absense will sound odd in speech
-                        newLine += $" (see links list). ";
-                        responseBuilder.Add(newLine);
-                        newLine = String.Empty;
-
-                        string hyperlink = word.Trim().TrimEnd('.');
-                        linksBuilder.Add(hyperlink);
+                        newLine += $"{word} ";
+                        continue;
                     }
+                    // Replace this 'word' with some TTS note, else its absense will sound odd in speech
+                    newLine += $" (see links list). ";
                     responseBuilder.Add(newLine);
+                    newLine = string.Empty;
+
+                    string hyperlink = word.Trim().TrimEnd('.');
+                    linksBuilder.Add(hyperlink);
                 }
-                response = string.Join(" ", responseBuilder).TrimEnd().Replace("  ", " ");
-                if (linksBuilder.Count > 0) { OpenAIplugin.VA_Proxy.SetText("OpenAI_ResponseLinks", string.Join(";", linksBuilder)); }
+                responseBuilder.Add(newLine);
             }
-            catch
-            {
-                Logging.WriteToLog_Long("OpenAI Plugin Error: response contains URL's and failed to post-process for text-to-speech", "red");
-            }
+
+            response = string.Join(" ", responseBuilder).TrimEnd().Replace("  ", " ");
+            if (linksBuilder.Count > 0)
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_ResponseLinks", string.Join(";", linksBuilder));
+
             return response;
         }
 
@@ -260,48 +266,45 @@ namespace OpenAI_VoiceAttack_Plugin
         /// from potential text-to-speech responses.
         /// </summary>
         /// <param name="response">The ChatGPT response with any code blocks culled out to a separate return text variable in VoiceAttack.</param>
-        /// <returns>The input response with code blocks culled out.</returns>
+        /// <returns>The input response with code blocks culled out.<br />
+        /// Also sets the 'OpenAI_ResponseCode' text variable to a newline deliniated list of any code blocks culled.</returns>
         private static string ParseCodeBlocks(string response)
         {
-            try
+            List<string> responseBuilder = new List<string>();
+            List<string> codeBuilder = new List<string>();
+
+            bool inCodeBlock = false;
+
+            // ChatGPT returns multiline responses separted by "\n" only
+            string[] responses = response.Split(new string[] { "\n" }, StringSplitOptions.None); // we must allow line breaks
+            foreach (string line in responses)
             {
-                List<string> responseBuilder = new List<string>();
-                List<string> codeBuilder = new List<string>();
-
-                bool inCodeBlock = false;
-
-                // ChatGPT returns multiline responses separted by "\n" only
-                string[] responses = response.Split(new string[] { "\n" }, StringSplitOptions.None); // allow line breaks
-                foreach (string line in responses)
+                if (line.StartsWith("`"))
                 {
-                    if (line.StartsWith("`"))
-                    {
-                        inCodeBlock = !inCodeBlock;
-                        continue;
-                    }
+                    inCodeBlock = !inCodeBlock;
+                    continue;
+                }
 
-                    if (!inCodeBlock)
+                if (!inCodeBlock)
+                {
+                    if (!string.IsNullOrWhiteSpace(line))
                     {
-                        if (!String.IsNullOrWhiteSpace(line))
-                        {
-                            string lineFinal = line;
-                            responseBuilder.Add(lineFinal.Replace("\u0023", " sharp") + "\r\n"); // add line with CRLF
-                        }
-                    }
-                    else
-                    {
-                        codeBuilder.Add(line + "\r\n"); // add line with CRLF
-                        if (line.EndsWith("`"))
-                            inCodeBlock = false;
+                        string lineFinal = line;
+                        responseBuilder.Add(lineFinal.Replace("\u0023", " sharp") + "\r\n");
                     }
                 }
-                response = string.Join(" ", responseBuilder).TrimEnd().Replace("\r\n\r\n", "\r\n");
-                if (codeBuilder.Count > 0) { OpenAIplugin.VA_Proxy.SetText("OpenAI_ResponseCode", string.Join(" ", codeBuilder)); }
+                else
+                {
+                    codeBuilder.Add(line + "\r\n");
+                    if (line.EndsWith("`"))
+                        inCodeBlock = false;
+                }
             }
-            catch
-            {
-                Logging.WriteToLog_Long("OpenAI Plugin Error: response contains code blocks and failed to post-process for text-to-speech", "red");
-            }
+
+            response = string.Join(" ", responseBuilder).TrimEnd().Replace("\r\n\r\n", "\r\n");
+            if (codeBuilder.Count > 0)
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_ResponseCode", string.Join(" ", codeBuilder));
+
             return response;
         }
 
@@ -322,147 +325,134 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <exception cref="Exception">Thrown up the stack to Logging.</exception>
         public static async Task Raw(bool chatSession)
         {
-            try
+            string userInput = string.Empty;
+            string lastInput = string.Empty;
+            string response = string.Empty;
+            string systemMessage = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_SystemPrompt") ?? DEFAULT_SYSTEM_PROMPT;
+            bool dataSessionBypass = false;
+
+            if (string.IsNullOrEmpty(userInput)) { throw new Exception("User prompt in OpenAI_UserInput text variable is null or empty."); }
+
+            // Set Chat Session Variable 'OpenAI_Chatting#' to TRUE will set OpenAI_Plugin.ChatActive to TRUE as well,
+            // This will allow a 'Stop Chatting' command to exit a chat session loop by setting this FALSE
+            if (OpenAI_Plugin.ChatActive != true)
             {
-                string userInput = String.Empty;
-                string lastInput = String.Empty;
-                string response = String.Empty;
-                string systemMessage = OpenAIplugin.VA_Proxy.GetText("OpenAI_SystemPrompt") ?? DEFAULT_SYSTEM_PROMPT;
-                bool dataSessionBypass = false;
+                OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_Chatting#", chatSession); // Only set this when not already active, for concurrent raw ChatGPT data calls during active sessions
+            }
+            else
+            {
+                dataSessionBypass = true;
+            }
+            bool sendToEXT = OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_ExternalResponder") ?? false; // Use Custom User External Command to process responses
+            bool sendToWAIT = OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_ExternalContinue") ?? false; // Wait after response for profile to signal 'continue'
+            sendToWAIT = chatSession && sendToWAIT; // can't be true outside a session, see 'OpenAI_Chatting#' comments above
 
-                if (String.IsNullOrEmpty(userInput)) { throw new Exception("User prompt in OpenAI_UserInput text variable is null or empty."); }
+            // Set the OpenAI GPT Model and any/all user options and create a new Chat Conversation:
+            Model userModel = ModelsGPT.GetOpenAI_Model();
 
-                // Set Chat Session Variable 'OpenAI_Chatting#' to TRUE will set OpenAIplugin.CHAT_ACTIVE to TRUE as well,
-                // This will allow a 'Stop Chatting' command to exit a chat session loop by setting this FALSE
-                if (OpenAIplugin.CHAT_ACTIVE != true)
+            // Ensure max tokens in 'OpenAI_MaxTokens' is within range for the selected model, uses 512 if not set/invalid
+            int userMaxTokens = ModelsGPT.GetValidMaxTokens(userModel);
+
+            decimal getTemp = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_Temperature") ?? 0.2M;
+            decimal getTopP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_TopP") ?? 0M;
+            decimal getFreqP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_FrequencyPenalty") ?? 0M;
+            decimal getPresP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_PresencePenalty") ?? 0M;
+
+            string getStopSequences = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_StopSequences") ?? string.Empty;
+            string[] userStopSequences = null;
+            if (!string.IsNullOrEmpty(getStopSequences))
+            {
+                userStopSequences = getStopSequences.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            int? userNumChoices = OpenAI_Plugin.VA_Proxy.GetInt("OpenAI_NumChoicesPerMessage") ?? null;
+            double userTemperature = (double)getTemp;
+            double userTopP = (double)getTopP;
+            double userFrequencyPenalty = (double)getFreqP;
+            double userPresencePenalty = (double)getPresP;
+
+            OpenAIAPI api = OpenAI_Key.LoadKey
+                ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
+                : new OpenAIAPI(APIAuthentication.LoadFromPath(
+                    directory: OpenAI_Key.DefaultKeyFileFolder,
+                    filename: OpenAI_Key.DefaultKeyFilename,
+                    searchUp: true
+            ));
+
+            var chat = api.Chat.CreateConversation(new ChatRequest()
+            {
+                Model = userModel,
+                Temperature = userTemperature,
+                MaxTokens = userMaxTokens,
+                TopP = userTopP,
+                FrequencyPenalty = userFrequencyPenalty,
+                PresencePenalty = userPresencePenalty,
+                NumChoicesPerMessage = userNumChoices,
+                MultipleStopSequences = userStopSequences
+            });
+
+            // Provide instruction as System (if any)
+            if (!string.IsNullOrEmpty(systemMessage))
+            {
+                chat.AppendSystemMessage(systemMessage);
+            }
+
+            // Provide input/output example for system refinement
+            string exampleInput = OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_UserInput_Example") ?? DEFAULT_USER_INPUT_EXAMPLE;
+            string exampleOutput = OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example") ?? DEFAULT_CHATBOT_OUTPUT_EXAMPLE;
+            if (systemMessage == DEFAULT_SYSTEM_PROMPT)
+            {
+                chat.AppendUserInput(DEFAULT_USER_INPUT_EXAMPLE);
+                chat.AppendExampleChatbotOutput(DEFAULT_CHATBOT_OUTPUT_EXAMPLE);
+            }
+            else
+            {
+                for (int i = 1; i <= 5; i++)
                 {
-                    OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_Chatting#", chatSession); // Only set this when not already active, for concurrent raw ChatGPT data calls during active sessions
-                }
-                else
-                {
-                    dataSessionBypass = true;
-                }
-                bool sendToEXT = OpenAIplugin.VA_Proxy.GetBoolean("OpenAI_ExternalResponder") ?? false; // Use Custom User External Command to process responses
-                bool sendToWAIT = OpenAIplugin.VA_Proxy.GetBoolean("OpenAI_ExternalContinue") ?? false; // Wait after response for profile to signal 'continue'
-                sendToWAIT = chatSession && sendToWAIT; // can't be true outside a session, see 'OpenAI_Chatting#' comments above
-
-                // Set the OpenAI GPT Model and any/all user options and create a new Chat Conversation:
-                Model userModel = ModelsGPT.GetOpenAI_Model();
-
-                // Ensure max tokens in 'OpenAI_MaxTokens' is within range for the selected model, uses 512 if not set/invalid
-                int userMaxTokens = ModelsGPT.GetValidMaxTokens(userModel);
-
-                decimal getTemp = OpenAIplugin.VA_Proxy.GetDecimal("OpenAI_Temperature") ?? 0.2M;
-                decimal getTopP = OpenAIplugin.VA_Proxy.GetDecimal("OpenAI_TopP") ?? 0M;
-                decimal getFreqP = OpenAIplugin.VA_Proxy.GetDecimal("OpenAI_FrequencyPenalty") ?? 0M;
-                decimal getPresP = OpenAIplugin.VA_Proxy.GetDecimal("OpenAI_PresencePenalty") ?? 0M;
-
-                string getStopSequences = OpenAIplugin.VA_Proxy.GetText("OpenAI_StopSequences") ?? String.Empty;
-                string[] userStopSequences = null;
-                if (!string.IsNullOrEmpty(getStopSequences))
-                {
-                    userStopSequences = getStopSequences.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                }
-
-                int? userNumChoices = OpenAIplugin.VA_Proxy.GetInt("OpenAI_NumChoicesPerMessage") ?? null;
-                double userTemperature = (double)getTemp;
-                double userTopP = (double)getTopP;
-                double userFrequencyPenalty = (double)getFreqP;
-                double userPresencePenalty = (double)getPresP;
-
-                OpenAIAPI api = OpenAI_Key.LOAD_KEY
-                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.API_KEY, OpenAI_Key.API_ORG))
-                    : new OpenAIAPI(APIAuthentication.LoadFromPath(
-                        directory: OpenAI_Key.DEFAULT_KEY_FILEFOLDER,
-                        filename: OpenAI_Key.DEFAULT_KEY_FILENAME,
-                        searchUp: true
-                ));
-
-                var chat = api.Chat.CreateConversation(new ChatRequest()
-                {
-                    Model = userModel,
-                    Temperature = userTemperature,
-                    MaxTokens = userMaxTokens,
-                    TopP = userTopP,
-                    FrequencyPenalty = userFrequencyPenalty,
-                    PresencePenalty = userPresencePenalty,
-                    NumChoicesPerMessage = userNumChoices,
-                    MultipleStopSequences = userStopSequences
-                });
-
-                // Provide instruction as System (if any)
-                if (!String.IsNullOrEmpty(systemMessage))
-                {
-                    chat.AppendSystemMessage(systemMessage);
-                }
-
-                // Provide input/output example for system refinement
-                string exampleInput = OpenAIplugin.VA_Proxy.GetText($"OpenAI_UserInput_Example") ?? DEFAULT_USER_INPUT_EXAMPLE;
-                string exampleOutput = OpenAIplugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example") ?? DEFAULT_CHATBOT_OUTPUT_EXAMPLE;
-                if (systemMessage == DEFAULT_SYSTEM_PROMPT)
-                {
-                    chat.AppendUserInput(DEFAULT_USER_INPUT_EXAMPLE);
-                    chat.AppendExampleChatbotOutput(DEFAULT_CHATBOT_OUTPUT_EXAMPLE);
-                }
-                else
-                {
-                    for (int i = 1; i <= 5; i++)
+                    exampleInput = OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_UserInput_Example{i}") ?? exampleInput;
+                    exampleOutput = OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example{i}") ?? exampleOutput;
+                    if (!string.IsNullOrWhiteSpace(exampleInput) && !string.IsNullOrWhiteSpace(exampleOutput))
                     {
-                        exampleInput = OpenAIplugin.VA_Proxy.GetText($"OpenAI_UserInput_Example{i}") ?? exampleInput;
-                        exampleOutput = OpenAIplugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example{i}") ?? exampleOutput;
-                        if (!String.IsNullOrWhiteSpace(exampleInput) && !String.IsNullOrWhiteSpace(exampleOutput))
-                        {
-                            chat.AppendUserInput(exampleInput);
-                            chat.AppendExampleChatbotOutput(exampleOutput);
-                        }
-                        exampleInput = String.Empty;
-                        exampleOutput = String.Empty;
+                        chat.AppendUserInput(exampleInput);
+                        chat.AppendExampleChatbotOutput(exampleOutput);
                     }
+                    exampleInput = string.Empty;
+                    exampleOutput = string.Empty;
                 }
-                do
+            }
+
+            do
+            {
+                if (!string.IsNullOrEmpty(userInput) && userInput != lastInput)
                 {
+                    chat.AppendUserInput(userInput);
 
-                    if (!String.IsNullOrEmpty(userInput) && userInput != lastInput)
+                    response = await chat.GetResponseFromChatbotAsync();
+
+                    OpenAI_Plugin.VA_Proxy.SetText("OpenAI_UserInput_Last", userInput);
+                    OpenAI_Plugin.VA_Proxy.SetText("OpenAI_UserInput", string.Empty);
+
+                    if (!string.IsNullOrEmpty(response))
                     {
-                        // Send the user input to ChatGPT
-                        chat.AppendUserInput(userInput);
+                        OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
 
-                        // Get the response from ChatGPT
-                        response = await chat.GetResponseFromChatbotAsync();
-
-                        OpenAIplugin.VA_Proxy.SetText("OpenAI_UserInput_Last", userInput);
-                        OpenAIplugin.VA_Proxy.SetText("OpenAI_UserInput", String.Empty);
-
-                        if (!String.IsNullOrEmpty(response))
-                        {
-                            OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", response);
-
-                            // Use custom user flow command to handle response
-                            if (sendToEXT)
-                                SendToExternalCommand(); // may potentially provide next user here input by setting 'OpenAI_UserInput'
-                        }
-
-                        lastInput = userInput;
-                        userInput = String.Empty;
+                        // Optional custom user flow command to handle response
+                        SendToExternalCommand(sendToEXT); // may potentially provide next user input here by setting 'OpenAI_UserInput'
                     }
 
-                    // Use custom user flow boolean to continue - waits here until 'OpenAI_ChatWaiting#' becomes false (or stop-all commands)
-                    if (sendToWAIT)
-                        WaitForExternalContinue(); // may potentially provide next user here input by setting 'OpenAI_UserInput'
-
-                    userInput = OpenAIplugin.VA_Proxy.GetText("OpenAI_UserInput") ?? String.Empty;
-
-                    // Bypass will be active for concurrent raw ChatGPT data calls during already active ChatGPT sessions
-                    if (!dataSessionBypass)
-                        chatSession = OpenAIplugin.CHAT_ACTIVE ?? false;
-
+                    lastInput = userInput;
                 }
-                while (chatSession && !OpenAIplugin._stopVariableToMonitor);
+
+                // Optional custom user flow boolean to continue - waits here until 'OpenAI_ChatWaiting#' becomes false (or stop-all commands)
+                WaitForExternalContinue(sendToWAIT); // may potentially provide next user input here by setting 'OpenAI_UserInput'
+
+                userInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput") ?? string.Empty;
+
+                // Bypass will be active for concurrent raw ChatGPT data calls during already active ChatGPT sessions
+                chatSession = !dataSessionBypass && (OpenAI_Plugin.ChatActive ?? false);
+
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"OpenAI Plugin Error: {ex.Message}");
-            }
+            while (chatSession && !OpenAI_Plugin._stopVariableToMonitor);
         }
 
         /// <summary>
@@ -500,286 +490,325 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <exception cref="Exception">Thrown up the stack to Logging.</exception>
         public static async Task Chat(bool chatSession, string operation)
         {
-            try
+            bool useWhisper = !string.IsNullOrEmpty(operation);
+            string lastSpokenCMD = OpenAI_Plugin.VA_Proxy.ParseTokens("{LASTSPOKENCMD}");
+            string lastInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput_Last") ?? string.Empty;
+            string userInput = string.Empty;
+            string response = string.Empty;
+
+            // Must Exit a Chat request if already chatting and/or waiting to continue to avoid race conditions on input/output variables
+            if (OpenAI_Plugin.ChatWaiting == true)
             {
-                bool useWhisper = !String.IsNullOrEmpty(operation);
-                string lastSpokenCMD = OpenAIplugin.VA_Proxy.ParseTokens("{LASTSPOKENCMD}");
-                string lastInput = OpenAIplugin.VA_Proxy.GetText("OpenAI_UserInput_Last") ?? String.Empty;
-                string userInput = String.Empty;
-                string response = String.Empty;
+                throw new Exception("Unable to initiate new Chat context plugin call, chat is already active and waiting to continue." + 
+                                    " Use Raw.Chat context for concurrent ChatGPT requests durring active Chat sessions.");
+            }
+            if (OpenAI_Plugin.ChatActive == true) { throw new Exception("Unable to initiate new Chat context plugin call, chat is already active. Use Raw.Chat context instead."); }
 
-                // Exit a Chat request if already chatting and/or waiting to continue
-                if (OpenAIplugin.CHAT_WAITING == true)
+            // Must reset to true here at top of any new Chat call. When false, can bypass the 'wait to continue' phase of a session back to GetInput
+            Dictation.GetInputTimeout = true; // This bool can only become false when (int) 'OpenAI_ListenTimeout_Seconds' > 0, else is always 'true'
+
+            // Set Chat Session Variable 'OpenAI_Chatting#' to TRUE will set OpenAI_Plugin.ChatActive to TRUE as well,
+            // This will allow a 'Stop Chatting' command to exit a chat session loop by setting this FALSE
+            OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_Chatting#", chatSession);
+
+
+            string systemMessage = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_SystemPrompt") ?? DEFAULT_SYSTEM_PROMPT;
+            bool sendToLog = OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_LogChat") ?? true;  // VoiceAttack Event Logging of user inputs & chatbot responses
+            bool sendToTTS = OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_SpeakChat") ?? true; // Use VoiceAttack 'say' command in 'OpenAI_Command_Speech' for responses
+            bool sendToEXT = OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_ExternalResponder") ?? false; // Use Custom User External Command to process responses
+            bool sendToWAIT = OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_ExternalContinue") ?? false; // Wait after response and GetInput Timeout for profile to signal 'continue'
+            bool sendToWAITexclusive = OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_ExternalContinue_Exclusive") ?? false; // Always wait after response for profile to signal 'continue'
+            string logInputPretext = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_LogChat_InputPretext") ?? "Asking ChatGPT:"; // Only used when sendToLog is true
+            string logOutputPretext = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_LogChat_OutputPretext") ?? "ChatGPT Reply:"; // Only used when sendToLog is true
+            bool sayPreListen = !string.IsNullOrEmpty(OpenAI_Plugin.VA_Proxy.GetText("OpenAI_TTS_PreListen") ?? string.Empty);
+
+            // Ensure Text-to-Speech command exists in VoiceAttack profile - exception will be thrown and plugin call will exit upon failure here:
+            string speechCommand = GetExistingCommand("OpenAI_Command_Speech", DEFAULT_SPEECH_COMMAND, sendToTTS); // default TTS command phrase: "((OpenAI Speech))"
+
+
+            userInput = Dictation.GetUserInput(useWhisper, sayPreListen);
+
+            if (useWhisper && !string.IsNullOrEmpty(userInput) && userInput != DEFAULT_REPROCESS_FLAG)
+                userInput = await Whisper.GetUserInputAsync(operation);
+
+            if (string.IsNullOrEmpty(userInput)) { throw new Exception("User prompt in OpenAI_UserInput text variable is null or empty."); }
+
+            // Optional speech before processing input through OpenAI API (which can be slow!)
+            if (userInput != DEFAULT_REPROCESS_FLAG)
+                ProvideFeedback("OpenAI_TTS_PreProcess");
+
+            Model userModel = ModelsGPT.GetOpenAI_Model();
+            int userMaxTokens = ModelsGPT.GetValidMaxTokens(userModel);
+
+            decimal getTemp = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_Temperature") ?? 0.2M;
+            decimal getTopP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_TopP") ?? 0M;
+            decimal getFreqP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_FrequencyPenalty") ?? 0M;
+            decimal getPresP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_PresencePenalty") ?? 0M;
+
+            string getStopSequences = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_StopSequences") ?? string.Empty;
+            string[] userStopSequences = null;
+            if (!string.IsNullOrEmpty(getStopSequences))
+            {
+                userStopSequences = getStopSequences.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            int? userNumChoices = OpenAI_Plugin.VA_Proxy.GetInt("OpenAI_NumChoicesPerMessage") ?? null;
+            double userTemperature = (double)getTemp;
+            double userTopP = (double)getTopP;
+            double userFrequencyPenalty = (double)getFreqP;
+            double userPresencePenalty = (double)getPresP;
+
+            OpenAIAPI api = OpenAI_Key.LoadKey
+                ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
+                : new OpenAIAPI(APIAuthentication.LoadFromPath(
+                    directory: OpenAI_Key.DefaultKeyFileFolder,
+                    filename: OpenAI_Key.DefaultKeyFilename,
+                    searchUp: true
+            ));
+
+            var chat = api.Chat.CreateConversation(new ChatRequest()
+            {
+                Model = userModel,
+                Temperature = userTemperature,
+                MaxTokens = userMaxTokens,
+                TopP = userTopP,
+                FrequencyPenalty = userFrequencyPenalty,
+                PresencePenalty = userPresencePenalty,
+                NumChoicesPerMessage = userNumChoices,
+                MultipleStopSequences = userStopSequences
+            });
+
+            if (!string.IsNullOrEmpty(systemMessage))
+            {
+                chat.AppendSystemMessage(systemMessage);
+            }
+
+            string exampleInput = OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_UserInput_Example1") ?? string.Empty;
+            string exampleOutput = OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example1") ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(exampleInput) && string.IsNullOrWhiteSpace(exampleOutput))
+            {
+                exampleInput = systemMessage == DEFAULT_SYSTEM_PROMPT
+                    ? OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_UserInput_Example") ?? DEFAULT_USER_INPUT_EXAMPLE
+                    : OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_UserInput_Example") ?? string.Empty;
+
+                exampleOutput = systemMessage == DEFAULT_SYSTEM_PROMPT
+                    ? OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example") ?? DEFAULT_CHATBOT_OUTPUT_EXAMPLE
+                    : OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example") ?? string.Empty;
+
+                if (!string.IsNullOrEmpty(exampleInput) && !string.IsNullOrEmpty(exampleOutput))
                 {
-                    throw new Exception("Unable to initiate new Chat context plugin call, chat is already active and waiting to continue." + 
-                                        " Use Raw.Chat context for concurrent ChatGPT requests durring active Chat sessions.");
+                    chat.AppendUserInput(DEFAULT_USER_INPUT_EXAMPLE);
+                    chat.AppendExampleChatbotOutput(DEFAULT_CHATBOT_OUTPUT_EXAMPLE);
                 }
-                if (OpenAIplugin.CHAT_ACTIVE == true) { throw new Exception("Unable to initiate new Chat context plugin call, chat is already active. Use Raw.Chat context instead."); }
-
-                // Must reset to true here at top of any new Chat call. When false, can bypass the 'wait to continue' phase of a session back to GetInput
-                Dictation.GetInputTimeout = true; // This bool can only become false when (int) 'OpenAI_ListenTimeout_Seconds' > 0, else is always 'true'
-
-                // Set Chat Session Variable 'OpenAI_Chatting#' to TRUE will set OpenAIplugin.CHAT_ACTIVE to TRUE as well,
-                // This will allow a 'Stop Chatting' command to exit a chat session loop by setting this FALSE
-                OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_Chatting#", chatSession);
-
-                // Set Custom User ChatGPT Options (or use defaults)
-                string systemMessage = OpenAIplugin.VA_Proxy.GetText("OpenAI_SystemPrompt") ?? DEFAULT_SYSTEM_PROMPT;
-                bool sendToLog = OpenAIplugin.VA_Proxy.GetBoolean("OpenAI_LogChat") ?? true;  // VoiceAttack Event Logging of user inputs & chatbot responses
-                bool sendToTTS = OpenAIplugin.VA_Proxy.GetBoolean("OpenAI_SpeakChat") ?? true; // Use VoiceAttack 'say' command in 'OpenAI_Command_Speech' for responses
-                bool sendToEXT = OpenAIplugin.VA_Proxy.GetBoolean("OpenAI_ExternalResponder") ?? false; // Use Custom User External Command to process responses
-                bool sendToWAIT = OpenAIplugin.VA_Proxy.GetBoolean("OpenAI_ExternalContinue") ?? false; // Wait after response and GetInput Timeout for profile to signal 'continue'
-                bool sendToWAITexclusive = OpenAIplugin.VA_Proxy.GetBoolean("OpenAI_ExternalContinue_Exclusive") ?? false; // Always wait after response for profile to signal 'continue'
-                string logInputPretext = OpenAIplugin.VA_Proxy.GetText("OpenAI_LogChat_InputPretext") ?? "Asking ChatGPT:";
-                string logOutputPretext = OpenAIplugin.VA_Proxy.GetText("OpenAI_LogChat_OutputPretext") ?? "ChatGPT Reply:";
-                bool sayPreListen = !String.IsNullOrEmpty(OpenAIplugin.VA_Proxy.GetText("OpenAI_TTS_PreListen") ?? String.Empty);
-
-                // Ensure Text-to-Speech command exists in VoiceAttack profile:
-                string speechCommand = GetExistingCommand("OpenAI_Command_Speech", DEFAULT_SPEECH_COMMAND, sendToTTS); // default TTS command phrase: "((OpenAI Speech))"
-
-
-                // Get User Input from variable, dictation token, or begin listening for dictation:
-                userInput = Dictation.GetUserInput(useWhisper, sayPreListen);
-
-                // If processing dictation audio with OpenAI Whisper transcription/translation:
-                if (useWhisper && !String.IsNullOrEmpty(userInput) && userInput != DEFAULT_REPROCESS_FLAG)
-                    userInput = Whisper.GetUserInput(operation);
-
-                if (String.IsNullOrEmpty(userInput)) { throw new Exception("User prompt in OpenAI_UserInput text variable is null or empty."); }
-
-                // Optional speech before processing input through OpenAI API (which can be slow!)
-                if (userInput != DEFAULT_REPROCESS_FLAG)
-                    ProvideFeedback("OpenAI_TTS_PreProcess");
-
-                // Set the OpenAI GPT Model and any/all user options and create a new Chat Conversation:
-                Model userModel = ModelsGPT.GetOpenAI_Model();
-
-                // Ensure max tokens in 'OpenAI_MaxTokens' is within range for the selected model, uses 512 if not set/invalid
-                int userMaxTokens = ModelsGPT.GetValidMaxTokens(userModel);
-
-                decimal getTemp = OpenAIplugin.VA_Proxy.GetDecimal("OpenAI_Temperature") ?? 0.2M;
-                decimal getTopP = OpenAIplugin.VA_Proxy.GetDecimal("OpenAI_TopP") ?? 0M;
-                decimal getFreqP = OpenAIplugin.VA_Proxy.GetDecimal("OpenAI_FrequencyPenalty") ?? 0M;
-                decimal getPresP = OpenAIplugin.VA_Proxy.GetDecimal("OpenAI_PresencePenalty") ?? 0M;
-
-                string getStopSequences = OpenAIplugin.VA_Proxy.GetText("OpenAI_StopSequences") ?? String.Empty;
-                string[] userStopSequences = null;
-                if (!string.IsNullOrEmpty(getStopSequences))
-                {
-                    userStopSequences = getStopSequences.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                }
-
-                int? userNumChoices = OpenAIplugin.VA_Proxy.GetInt("OpenAI_NumChoicesPerMessage") ?? null;
-                double userTemperature = (double)getTemp;
-                double userTopP = (double)getTopP;
-                double userFrequencyPenalty = (double)getFreqP;
-                double userPresencePenalty = (double)getPresP;
-
-                OpenAIAPI api = OpenAI_Key.LOAD_KEY
-                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.API_KEY, OpenAI_Key.API_ORG))
-                    : new OpenAIAPI(APIAuthentication.LoadFromPath(
-                        directory: OpenAI_Key.DEFAULT_KEY_FILEFOLDER,
-                        filename: OpenAI_Key.DEFAULT_KEY_FILENAME,
-                        searchUp: true
-                ));
-
-                var chat = api.Chat.CreateConversation(new ChatRequest()
-                {
-                    Model = userModel,
-                    Temperature = userTemperature,
-                    MaxTokens = userMaxTokens,
-                    TopP = userTopP,
-                    FrequencyPenalty = userFrequencyPenalty,
-                    PresencePenalty = userPresencePenalty,
-                    NumChoicesPerMessage = userNumChoices,
-                    MultipleStopSequences = userStopSequences
-                });
-
-                // Provide instruction as System (if any)
-                if (!String.IsNullOrEmpty(systemMessage))
-                {
-                    chat.AppendSystemMessage(systemMessage);
-                }
-
-                // Provide input/output example for system refinement
-                string exampleInput = OpenAIplugin.VA_Proxy.GetText($"OpenAI_UserInput_Example1") ?? String.Empty;
-                string exampleOutput = OpenAIplugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example1") ?? String.Empty;
-                if (String.IsNullOrWhiteSpace(exampleInput) && String.IsNullOrWhiteSpace(exampleOutput))
-                {
-                    exampleInput = systemMessage == DEFAULT_SYSTEM_PROMPT
-                        ? OpenAIplugin.VA_Proxy.GetText($"OpenAI_UserInput_Example") ?? DEFAULT_USER_INPUT_EXAMPLE
-                        : OpenAIplugin.VA_Proxy.GetText($"OpenAI_UserInput_Example") ?? String.Empty;
-
-                    exampleOutput = systemMessage == DEFAULT_SYSTEM_PROMPT
-                        ? OpenAIplugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example") ?? DEFAULT_CHATBOT_OUTPUT_EXAMPLE
-                        : OpenAIplugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example") ?? String.Empty;
-
-                    if (!String.IsNullOrEmpty(exampleInput) && !String.IsNullOrEmpty(exampleOutput))
-                    {
-                        chat.AppendUserInput(DEFAULT_USER_INPUT_EXAMPLE);
-                        chat.AppendExampleChatbotOutput(DEFAULT_CHATBOT_OUTPUT_EXAMPLE);
-                    }
-                }
-                else
-                {
-                    int i = 0;
-                    do
-                    {
-                        i++;
-                        exampleInput = OpenAIplugin.VA_Proxy.GetText($"OpenAI_UserInput_Example{i}") ?? String.Empty;
-                        exampleOutput = OpenAIplugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example{i}") ?? String.Empty;
-                        if (String.IsNullOrWhiteSpace(exampleInput) || String.IsNullOrWhiteSpace(exampleOutput))
-                            break;
-
-                        chat.AppendUserInput(exampleInput);
-                        chat.AppendExampleChatbotOutput(exampleOutput);
-                    }
-                    while (!OpenAIplugin._stopVariableToMonitor);
-
-                    if (OpenAIplugin.DEBUG_ACTIVE == true)
-                        Logging.WriteToLog_Long($"OpenAI Plugin: {i} input/output messages have been loaded to this ChatGPT Session", "orange");
-
-                }
-
-                // If reprocessing on first run, this is merely to load past conversations and initiate an already waiting session:
-                if (userInput == DEFAULT_REPROCESS_FLAG)
-                    userInput = String.Empty;
-
+            }
+            else
+            {
+                int i = 0;
                 do
                 {
-                    // Write the user input to VoiceAttack Event Log (if enabled)
-                    if (sendToLog && !Dictation.GetInputTimeout)
-                        Logging.WriteToLog_Long($"{logInputPretext} {userInput}", "yellow");
+                    i++;
+                    exampleInput = OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_UserInput_Example{i}") ?? string.Empty;
+                    exampleOutput = OpenAI_Plugin.VA_Proxy.GetText($"OpenAI_ChatbotOutput_Example{i}") ?? string.Empty;
+                    if (string.IsNullOrWhiteSpace(exampleInput) || string.IsNullOrWhiteSpace(exampleOutput))
+                        break;
 
-                    // For a perpetual background chat session configuration, ignore existing user commands and return to waiting
-                    if (!OpenAIplugin.VA_Proxy.Command.Exists(userInput))
+                    chat.AppendUserInput(exampleInput);
+                    chat.AppendExampleChatbotOutput(exampleOutput);
+                }
+                while (!OpenAI_Plugin._stopVariableToMonitor);
+
+                if (OpenAI_Plugin.DebugActive == true)
+                    Logging.WriteToLog_Long($"OpenAI Plugin: {i} input/output messages have been loaded to this ChatGPT Session", "orange");
+
+            }
+
+            // If reprocessing on first run, this is merely to load past conversations and initiate an already waiting session:
+            if (userInput == DEFAULT_REPROCESS_FLAG)
+                userInput = string.Empty;
+
+            do
+            {
+                /// NOTE: Dev Testing NEW PreProcessInput phase - this will go at the top of the ChatGPT method, here only while building:
+                string processingCommand = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_Command_PreProcessInput") ?? string.Empty;
+                bool processingCustom = !string.IsNullOrEmpty(processingCommand) && OpenAI_Plugin.VA_Proxy.Command.Exists(processingCommand);
+                float? processingSimilarity = (float?)OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_PreProcessSimilarity");
+                int processingCount = (int)(OpenAI_Plugin.VA_Proxy.GetInt("OpenAI_PreProcessSimilarityCount") ?? 0);
+                int? processingVolume = (int?)OpenAI_Plugin.VA_Proxy.GetInt("OpenAI_PreProcessSimilarityVolume");
+                string processingPrompt = OpenAI_Plugin.VA_Proxy.GetInt("OpenAI_PreProcessSimilarityPrompt") ?? string.Empty;
+                bool sendToEXEC = OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_PreProcessExecute") ?? false;
+                bool sendToJSON = OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_PreProcessInput") ?? false;
+                if (sendToJSON)
+                {
+                    Embedding.ExistingEmbeddings.Clear();
+
+                    string vectorsFilePath = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_PreProcessJSON") ?? string.Empty;
+                    if (!string.IsNullOrEmpty(vectorsFilePath))
                     {
-                        if (String.IsNullOrEmpty(userInput) || (!String.IsNullOrEmpty(userInput) && userInput == lastInput))
-                        {
-                            // Exit or return to a Waiting Loop when input is same as last or emtpy
-                            Dictation.GetInputTimeout = true;
-                            OpenAIplugin.VA_Proxy.SetText("OpenAI_TTS_Response", DEFAULT_REPROCESS_FLAG);
-                            OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", String.Empty);
-                        }
-                        else
-                        {
-                            // Reset Response Post-Process text variables here
-                            OpenAIplugin.VA_Proxy.SetText("OpenAI_ResponseCode", null);
-                            OpenAIplugin.VA_Proxy.SetText("OpenAI_ResponseLinks", null);
+                        // Deserialize the JSON file to a list of EmbeddingEntry objects for use in Session loop
+                        Embedding.ExistingEmbeddings = Embedding.ReadJsonFile(vectorsFilePath);
+                    }
 
-                            // Send the user input to ChatGPT
-                            chat.AppendUserInput(userInput);
-                            lastInput = userInput;
+                    if (Embedding.ExistingEmbeddings.Count == 0)
+                    {
+                        throw new Exception($"OpenAI_PreProcessInput is TRUE but no valid embedding vectors file found at: {vectorsFilePath}");
+                    }
+                }
 
-                            // Get the response from ChatGPT
-                            response = await chat.GetResponseFromChatbotAsync();
+                // Peform optional pre-processing of input - first new action inside do-while session loop:
+                string userInputText = userInput;
+                if (!(Dictation.GetInputTimeout || string.IsNullOrEmpty(userInput) || OpenAI_Plugin.VA_Proxy.Command.Exists(userInput)))
+                {
+                    // Optional pre-processing of user input using embedding vectors cosine similarity:
+                    if (sendToJSON)
+                    {
+                        userInput = await Embedding.Processing(
+                            embeddingEntries: Embedding.ExistingEmbeddings,
+                            similarityCutoff: processingSimilarity,
+                            systemPrompt: processingPrompt,
+                            embeddingContent: userInput,
+                            topN: processingVolume,
+                            topK: processingCount
+                        );
+                    }
 
-                            if (!String.IsNullOrEmpty(response))
-                            {
-                                OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", response);
+                    // Optional custom pre-processing of user input after whisper and/or embedding vector pre-processing above:
+                    if (processingCustom)
+                    {
+                        OpenAI_Plugin.VA_Proxy.Command.Execute(processingCommand, true); // waits here for it to complete...
+                        userInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput") ?? string.Empty;
+                    }
 
-                                // Attempt to post-process for TTS response by separating out code blocks (if properly contained in "`" symbols)
-                                if (response.Contains("`"))
-                                {
-                                    response = ParseCodeBlocks(response);
-                                }
+                    // Optional execution of pre-processed user input as existing command in VoiceAttack:
+                    if (sendToEXEC && !string.IsNullOrEmpty(userInput) && OpenAI_Plugin.VA_Proxy.Command.Exists(userInput))
+                    {
+                        OpenAI_Plugin.VA_Proxy.Command.Execute(userInput, true); // waits here for it to complete...
+                    }
+                }
 
-                                // Attempt to post-process for TTS response by separating out hyperlinks (if containing any "https:/" URL prefixes)
-                                if (response.Contains("https:/") || response.Contains("www."))
-                                {
-                                    response = ParseHyperlinks(response);
-                                }
-
-                                OpenAIplugin.VA_Proxy.SetText("OpenAI_TTS_Response", response);
-                            }
-                        }
-                        OpenAIplugin.VA_Proxy.SetText("OpenAI_UserInput_Last", userInput);
-                        OpenAIplugin.VA_Proxy.SetText("OpenAI_UserInput", String.Empty);
-
-                        // Pre-Speech break check for 'stop' during wait for chatbot response
-                        if (OpenAIplugin._stopVariableToMonitor)
-                            break;
-
-                        // Write the ChatGPT response to VoiceAttack Event Log (if enabled)
-                        if (sendToLog && !Dictation.GetInputTimeout)
-                            Logging.WriteToLog_Long($"{logOutputPretext} {response}", "green");
-
-                        // Use text-to-speech to say the response using the OpenAI Plugin VoiceAttack Profile required function command,
-                        // default TTS command phrase: "((OpenAI Speech))"
-                        if (sendToTTS)
-                            OpenAIplugin.VA_Proxy.Command.Execute(speechCommand, true);
-
-                        // Use custom user flow command to handle response
-                        if (sendToEXT && !Dictation.GetInputTimeout)
-                            SendToExternalCommand(); // may potentially provide next user here input by setting 'OpenAI_UserInput'
-
+                // For a perpetual background chat session configuration, ignore existing user commands and return to waiting
+                if (!OpenAI_Plugin.VA_Proxy.Command.Exists(userInput))
+                {
+                    if (string.IsNullOrEmpty(userInput) || (!string.IsNullOrEmpty(userInput) && userInput == lastInput))
+                    {
+                        // Exit or return to a Waiting Loop when input is same as last or emtpy
+                        Dictation.GetInputTimeout = true;
+                        OpenAI_Plugin.VA_Proxy.SetText("OpenAI_TTS_Response", DEFAULT_REPROCESS_FLAG);
+                        OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", string.Empty);
                     }
                     else
                     {
-                        // An Unrecognized command (low confidence?) fixed by Whisper and exists, ignore the user input
-                        // ...later, this could be a place to re-execute if it wasn't executed? For a future version....
+                        // Write the user input to VoiceAttack Event Log (if enabled)
+                        if (sendToLog)
+                        {
+                            Logging.WriteToLog_Long($"{logInputPretext} {userInputText}", "yellow");
+                        }
 
-                        Dictation.GetInputTimeout = true; // If command exists after transcription, consider it as a timeout for now
+                        // Reset Response Post-Process text variables here
+                        OpenAI_Plugin.VA_Proxy.SetText("OpenAI_ResponseCode", null);
+                        OpenAI_Plugin.VA_Proxy.SetText("OpenAI_ResponseLinks", null);
+
+                        // Send the user input to ChatGPT
+                        chat.AppendUserInput(userInput);
+                        lastInput = userInput;
+
+                        // Get the response from ChatGPT
+                        response = await chat.GetResponseFromChatbotAsync();
+
+                        if (!string.IsNullOrEmpty(response))
+                        {
+                            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
+
+                            // Attempt to post-process for TTS response by separating out code blocks (if properly contained in "`" symbols)
+                            if (response.Contains("`"))
+                            {
+                                response = ParseCodeBlocks(response);
+                            }
+
+                            // Attempt to post-process for TTS response by separating out hyperlinks (if containing any "https:/" URL prefixes)
+                            if (response.Contains("https:/") || response.Contains("www."))
+                            {
+                                response = ParseHyperlinks(response);
+                            }
+
+                            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_TTS_Response", response);
+                        }
                     }
+                    OpenAI_Plugin.VA_Proxy.SetText("OpenAI_UserInput_Last", userInput);
+                    OpenAI_Plugin.VA_Proxy.SetText("OpenAI_UserInput", string.Empty);
 
-                    // Reset this var in case they spoke a 'Stop Talking' command, but not 'Stop Chat Session' command
-                    lastSpokenCMD = OpenAIplugin.VA_Proxy.ParseTokens("{LASTSPOKENCMD}");
-
-                    // Post-Speech break check for non-session context or 'stop all commands' action
-                    if (!chatSession || OpenAIplugin._stopVariableToMonitor)
+                    // Pre-Speech break check for 'stop' during wait for chatbot response
+                    if (OpenAI_Plugin._stopVariableToMonitor)
                         break;
 
-                    // Use custom user flow boolean to continue - waits here until 'OpenAI_ChatWaiting#' becomes false (or stop-all commands, if not 'unstoppable')
-                    if (sendToWAIT && sendToWAITexclusive || sendToWAIT && Dictation.GetInputTimeout)
-                        WaitForExternalContinue(); // may potentially provide next user here input by setting 'OpenAI_UserInput'
+                    // Write the ChatGPT response to VoiceAttack Event Log (if enabled)
+                    if (sendToLog && !Dictation.GetInputTimeout)
+                        Logging.WriteToLog_Long($"{logOutputPretext} {response}", "green");
 
-                    // Post-External Continue break check for session end or 'stop all commands' action
-                    if (sendToWAIT && (OpenAIplugin.CHAT_ACTIVE != true || OpenAIplugin._stopVariableToMonitor))
-                        break;
-                        
-                    // Get New User Input for this Chat Session either from existing external input or our GetUserInput() method:
-                    userInput = OpenAIplugin.VA_Proxy.GetText("OpenAI_UserInput") ?? String.Empty;
-                    userInput = (!sendToEXT || (sendToEXT && String.IsNullOrEmpty(userInput)))
-                                    ? Dictation.GetUserInput(useWhisper, sayPreListen)
-                                    : userInput;
+                    // Use text-to-speech to say the response using the OpenAI Plugin VoiceAttack Profile required function command,
+                    // default TTS command phrase: "((OpenAI Speech))"
+                    if (sendToTTS)
+                        OpenAI_Plugin.VA_Proxy.Command.Execute(speechCommand, true);
 
+                    // Use custom user flow command to handle response
+                    SendToExternalCommand(sendToEXT && !Dictation.GetInputTimeout); // may potentially provide next user input here by setting 'OpenAI_UserInput'
 
-                    // Post-Dictation break check to end a chat session and exit if the 'stop chatting' or any voice other command is detected:
-                    if (OpenAIplugin.CHAT_ACTIVE != true || OpenAIplugin._stopVariableToMonitor || (!chatSession && lastSpokenCMD != OpenAIplugin.VA_Proxy.ParseTokens("{LASTSPOKENCMD}")))
-                        break;
-
-
-                    if (userInput == lastInput)
-                    {
-                        Dictation.GetInputTimeout = true;
-                    }
-
-                    // Optional speech before processing chat session input through OpenAI API (which can be slow!)
-                    if (!Dictation.GetInputTimeout)
-                        ProvideFeedback("OpenAI_TTS_PreProcess");
-
-                    // Post-processing dictation audio with OpenAI Whisper transcription/translation:
-                    if (useWhisper && !Dictation.GetInputTimeout)
-                        userInput = Whisper.GetUserInput(operation);
-
-                    if (userInput.Contains("Error:"))
-                    {
-                        Dictation.GetInputTimeout = true;
-                    }
-
-                    if (Dictation.GetInputTimeout)
-                        userInput = String.Empty;
-
-                    if (String.IsNullOrEmpty(userInput) && !Dictation.GetInputTimeout) { throw new Exception("User prompt in OpenAI_UserInput text variable is null or empty."); }
-
-                    chatSession = OpenAIplugin.CHAT_ACTIVE ?? false;
                 }
-                while (chatSession && !OpenAIplugin._stopVariableToMonitor);
+                else
+                {
+                    // An Unrecognized command (low confidence?) fixed by Whisper and exists, ignore the user input
+                    // ...later, this could be a place to re-execute if it wasn't executed? For a future version....
+
+                    Dictation.GetInputTimeout = true; // If command exists after transcription, consider it as a timeout for now
+                }
+
+                // Reset this var in case they spoke a 'Stop Talking' command, but not 'Stop Chat Session' command
+                lastSpokenCMD = OpenAI_Plugin.VA_Proxy.ParseTokens("{LASTSPOKENCMD}");
+
+                // Post-Speech break check for non-session context or 'stop all commands' action
+                if (!chatSession || OpenAI_Plugin._stopVariableToMonitor)
+                    break;
+
+                // Use custom user flow boolean to continue - waits here until 'OpenAI_ChatWaiting#' becomes false (or stop-all commands, if not 'unstoppable')
+                WaitForExternalContinue(sendToWAIT && sendToWAITexclusive || sendToWAIT && Dictation.GetInputTimeout); // may potentially provide next user input here by setting 'OpenAI_UserInput'
+
+                if (sendToWAIT && (OpenAI_Plugin.ChatActive != true || OpenAI_Plugin._stopVariableToMonitor))
+                    break;
+
+
+                userInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput") ?? string.Empty;
+                userInput = (!sendToEXT || (sendToEXT && string.IsNullOrEmpty(userInput)))
+                                ? Dictation.GetUserInput(useWhisper, sayPreListen)
+                                : userInput;
+
+                if (OpenAI_Plugin.ChatActive != true || OpenAI_Plugin._stopVariableToMonitor || (!chatSession && lastSpokenCMD != OpenAI_Plugin.VA_Proxy.ParseTokens("{LASTSPOKENCMD}")))
+                    break;
+
+
+                if (userInput == lastInput)
+                {
+                    Dictation.GetInputTimeout = true;
+                }
+
+                // Optional speech before processing chat session input through OpenAI API (which can be slow!)
+                if (!Dictation.GetInputTimeout)
+                    ProvideFeedback("OpenAI_TTS_PreProcess");
+
+                if (useWhisper && !Dictation.GetInputTimeout)
+                    userInput = await Whisper.GetUserInputAsync(operation);
+
+                if (userInput.StartsWith("OpenAI_NET"))
+                {
+                    Dictation.GetInputTimeout = true;
+                }
+
+                if (Dictation.GetInputTimeout)
+                    userInput = string.Empty;
+
+                if (string.IsNullOrEmpty(userInput) && !Dictation.GetInputTimeout) { throw new Exception("User prompt in OpenAI_UserInput text variable is null or empty."); }
+
+                chatSession = OpenAI_Plugin.ChatActive ?? false;
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"OpenAI Plugin Error: {ex.Message}");
-            }
+            while (chatSession && !OpenAI_Plugin._stopVariableToMonitor);
         }
 
     }

@@ -44,7 +44,7 @@ namespace OpenAI_NET
             try
             {
                 // Set Organization ID if contained in the API key within args
-                string argsOrg = String.Empty;
+                string argsOrg = string.Empty;
                 if (args.Length > 0)
                 {
                     if (args[1].Contains(':'))
@@ -56,7 +56,7 @@ namespace OpenAI_NET
                 }
 
                 // Set the host with or without organization id
-                using var host = String.IsNullOrEmpty(argsOrg)
+                using var host = string.IsNullOrEmpty(argsOrg)
                     ? Host.CreateDefaultBuilder(args)
                     .ConfigureServices((builder, services) =>
                     {
@@ -81,7 +81,7 @@ namespace OpenAI_NET
 
                 var transcription = await openAi.Audio.GetTranscription(args[2]);
 
-                if (String.IsNullOrEmpty(transcription.Result!.Text))
+                if (string.IsNullOrEmpty(transcription.Result!.Text))
                     throw new Exception($"Transcription Error - results text is null or empty!");
 
                 // Send the transcribed text back to the OpenAI VoiceAttack Plugin

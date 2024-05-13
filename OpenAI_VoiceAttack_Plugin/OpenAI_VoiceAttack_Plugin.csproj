@@ -98,6 +98,7 @@
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.7.0.2\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -131,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="context\KeyForm.cs" />
+    <Compile Include="NewModels.cs" />
     <Compile Include="service\Dictation.cs" />
     <Compile Include="service\Configuration.cs" />
     <Compile Include="context\Whisper.cs" />
@@ -145,7 +147,7 @@
     <Compile Include="service\Logging.cs" />
     <Compile Include="service\OpenAI_Key.cs" />
     <Compile Include="service\ModelsGPT.cs" />
-    <Compile Include="OpenAIplugin.cs" />
+    <Compile Include="OpenAI_Plugin.cs" />
     <Compile Include="service\OpenAI_NET.cs" />
     <Compile Include="service\Piping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

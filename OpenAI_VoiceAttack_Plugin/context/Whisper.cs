@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace OpenAI_VoiceAttack_Plugin
 {
@@ -32,7 +33,7 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <summary>
         /// A default error message that can be set or checked against a response to communicate issues.
         /// </summary>
-        public static readonly string DEFAULT_ERROR_MESSAGE = "Error processing audio file.";
+        public static readonly string DefaultErrorMessage = "Error processing audio file.";
 
 
         /// <summary>
@@ -40,15 +41,15 @@ namespace OpenAI_VoiceAttack_Plugin
         /// </summary>
         /// <param name="operation">The type of Whisper operation to perform, either "transcription" or "translation".</param>
         /// <returns>The returned text from Whisper, or an empty string if error has occurred.</returns>
-        public static string GetUserInput(string operation)
+        public static async Task<string> GetUserInputAsync(string operation)
         {
-            string userInput = String.Empty;
-            ProcessAudio(operation);
+            string userInput = string.Empty;
+            await ProcessAudio(operation);
 
-            if (OpenAIplugin.VA_Proxy.GetBoolean("OpenAI_Error") != true)
+            if (OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_Error") != true)
             {
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_UserInput", OpenAIplugin.VA_Proxy.GetText("OpenAI_Response") ?? String.Empty);
-                userInput = OpenAIplugin.VA_Proxy.GetText("OpenAI_UserInput") ?? String.Empty;
+                userInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_Response") ?? string.Empty;
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_UserInput", userInput);
             }
             return userInput;
         }
@@ -59,7 +60,7 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <returns>
         /// Sets the OpenAI_Response text variable to a string that contains the transcribed if successful,
         /// or an error message if the operation fails.</returns>
-        public static void ProcessAudio() { ProcessAudio("transcribe"); }
+        public static Task ProcessAudio() { return ProcessAudio("transcribe"); }
         /// <summary>
         /// Transcribe audio into text or Translate non-English audio into English text using OpenAI Whisper.
         /// </summary>
@@ -67,72 +68,52 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <returns>
         /// Sets the OpenAI_Response text variable to a string that contains the transcribed or translated text if successful,
         /// or an error message if the operation fails.</returns>
-        public static void ProcessAudio(string operation)
+        public static Task ProcessAudio(string operation)
         {
-            try
+            string audioFilePath = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_AudioPath") ??
+                                    (OpenAI_Plugin.VA_Proxy.GetText("OpenAI_AudioFile") ??
+                                    Configuration.DEFAULT_AUDIO_PATH);
+
+            string response = DefaultErrorMessage;
+            
+            int timeoutMs = 5000; // 5 second timeout
+            int intervalMs = 100;
+            DateTime startTime = DateTime.Now;
+            while (!System.IO.File.Exists(audioFilePath))
             {
-                string audioFilePath = OpenAIplugin.VA_Proxy.GetText("OpenAI_AudioPath") ?? (OpenAIplugin.VA_Proxy.GetText("OpenAI_AudioFile") ?? Configuration.DEFAULT_AUDIO_PATH);
-                string response = DEFAULT_ERROR_MESSAGE;
-                bool isError = false;
-
-
-                // Ensure dictation audio file exists
-                int timeoutMs = 5000; // 5 seconds
-                int intervalMs = 100; // 100 milliseconds
-                DateTime startTime = DateTime.Now;
-                while (!System.IO.File.Exists(audioFilePath))
+                if ((DateTime.Now - startTime).TotalMilliseconds >= timeoutMs)
                 {
-                    // Check if the timeout has been reached
-                    if ((DateTime.Now - startTime).TotalMilliseconds >= timeoutMs)
-                    {
-                        throw new Exception("Dictation Audio File not found!");
-                    }
-
-                    Thread.Sleep(intervalMs);
+                    throw new Exception("Timeout - Dictation Audio File not found!");
                 }
 
-
-                List<string> args = new List<string>
-                {
-                    operation,
-                    OpenAI_Key.API_KEY,
-                    audioFilePath
-                };
-
-                // Send the function request to the OpenAI_NET App
-                if (!Piping.SendArgsToNamedPipe(args.ToArray()))
-                {
-                    throw new Exception($"Failed to send {operation} request through pipe!");
-                }
-
-                // Listen for the response from the OpenAI_NET App
-                string[] responses = Piping.ListenForArgsOnNamedPipe();
-                if (responses != null && !String.IsNullOrEmpty(responses[0]))
-                {
-                    response = responses[0];
-                    if (response.StartsWith("OpenAI_NET"))
-                    {
-                        isError = true;
-                    }
-                }
-                else
-                {
-                    isError = true;
-                }
-
-                // Set the error flag if necessary
-                if (isError)
-                {
-                    OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_Error", true);
-                }
-
-                // Set the response to the VoiceAttack text variable and exit
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Response", response);
+                Thread.Sleep(intervalMs);
             }
-            catch (Exception ex)
+
+            List<string> args = new List<string>
             {
-                throw new Exception($"Whisper Error: {ex.Message}");
+                operation,
+                OpenAI_Key.ApiKey,
+                audioFilePath
+            };
+
+            if (!Piping.SendArgsToNamedPipe(args.ToArray()))
+            {
+                throw new Exception($"Failed to pipe {operation} request to OpenAI_NET App!");
             }
+
+            string[] responses = Piping.ListenForArgsOnNamedPipe();
+
+            bool isError = (responses == null || string.IsNullOrEmpty(responses[0]));
+            if (!isError)
+            {
+                response = responses[0];
+                isError = response.StartsWith("OpenAI_NET");
+            }
+
+            OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_Error", isError);
+            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
+
+            return Task.CompletedTask;
         }
 
     }

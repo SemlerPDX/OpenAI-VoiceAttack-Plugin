@@ -2,6 +2,7 @@
 using OpenAI_API.Models;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace OpenAI_VoiceAttack_Plugin
 {
@@ -136,7 +137,12 @@ namespace OpenAI_VoiceAttack_Plugin
         {
             try
             {
-                string modelName = OpenAIplugin.VA_Proxy.GetText("OpenAI_Model") ?? (completionModel
+                /// NOTE: new test for new 16k models - NOT GONNA WORK!!!
+                //string newModelName = CheckNewModels(completionModel);
+                //if (!string.IsNullOrEmpty(newModelName))
+                //    return null;
+
+                string modelName = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_Model") ?? (completionModel
                     ? DEFAULT_CHAT_MODEL_NAME
                     : DEFAULT_COMPLETION_MODEL_NAME);
 
@@ -164,17 +170,48 @@ namespace OpenAI_VoiceAttack_Plugin
             catch (ArgumentNullException ex)
             {
                 Logging.WriteToLog_Long($"OpenAI Plugin Error in TryGetValue: {ex.Message}", "red");
-                OpenAIplugin.VA_Proxy.WriteToLog("The default 'ChatGPTTurbo' model will be used instead.", "blank");
+                OpenAI_Plugin.VA_Proxy.WriteToLog("The default 'ChatGPTTurbo' model will be used instead.", "blank");
             }
             catch (Exception ex)
             {
                 Logging.WriteToLog_Long($"OpenAI Plugin Error: {ex.Message}", "red");
-                OpenAIplugin.VA_Proxy.WriteToLog("The default 'ChatGPTTurbo' model will be used instead.", "blank");
+                OpenAI_Plugin.VA_Proxy.WriteToLog("The default 'ChatGPTTurbo' model will be used instead.", "blank");
             }
 
             // Handle the case where the user specified an unknown or invalid model name
             return completionModel ? DEFAULT_COMPLETION_MODEL : DEFAULT_CHAT_MODEL;
         }
+
+        /// <summary>
+        /// Checks for new 16k model requests, and returns the model name in string format.
+        /// </summary>
+        /// <param name="completionModel">Flag indicating whether the completion model is requested.</param>
+        /// <returns>The 16k ChatGPT model requested, or an empty string if none.</returns>
+        //public static string CheckNewModels(bool completionModel)
+        //{
+        //    string modelName = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_Model") ?? string.Empty;
+
+        //    if (completionModel)
+        //        return modelName;
+
+        //    if (OpenAIChatGPTmodels.Contains(modelName))
+        //        return modelName;
+
+        //    if (modelName.Contains("16k"))
+        //    {
+        //        if (modelName.EndsWith("0613"))
+        //        {
+        //            modelName = "gpt-3.5-turbo-16k-0613";
+        //        }
+        //        else
+        //        {
+        //            modelName = "gpt-3.5-turbo-16k";
+        //        }
+        //    }
+
+        //    return modelName;
+        //}
+
 
 
         /// <summary>
@@ -188,7 +225,7 @@ namespace OpenAI_VoiceAttack_Plugin
         {
             try
             {
-                int maxTokens = OpenAIplugin.VA_Proxy.GetInt("OpenAI_MaxTokens") ?? 0;
+                int maxTokens = OpenAI_Plugin.VA_Proxy.GetInt("OpenAI_MaxTokens") ?? 0;
                 if (MaxTokensByModel.TryGetValue(gptModel, out int maxAllowed) && maxTokens > maxAllowed)
                 {
                     return maxAllowed;

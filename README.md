@@ -160,7 +160,7 @@ SHA512: 889d4dad58e7b018e24b18ea3267d217a6ccd9fcd6742cfb7185f1a5a7c120ce6439f877
 **Import the VoiceAttack Plugin Profile Package**
  1. *Set VoiceAttack to Run as Admin and Disable Plugin Support (only required for import)*
  2. *Re-Start VoiceAttack **(only if you had to perform either task above, to apply changes)***
- 3. *Press the Import Profile button, select this profile package (`OpenAI API Plugin for VoiceAttack.vax`) and import*
+ 3. *Press the Import Profile button, select this profile package (`OpenAI_API_Plugin_for_VoiceAttack.vax`) and import*
     - *Before re-enabling Plugin Support, you can import profiles which use this plugin now, such as <a href="https://veterans-gaming.com/semlerpdx/avcs/chat/">AVCS CHAT</a>*
  4. *When done importing, Re-enable Plugin Support in VoiceAttack Options*
  5. *Re-Start VoiceAttack*
@@ -213,7 +213,7 @@ In order for the OpenAI Plugin to function, as well as the example commands in t
 <br />
 
 ![OpenAI Plugin KeyForm](https://i.imgur.com/Rmo746Z.png) &nbsp; ![OpenAI Plugin KeyForm - Already Saved](https://i.imgur.com/GABSTyO.png)<br /><br />
-In order for the OpenAI Plugin to function, as well as the example commands in the included OpenAI Plugin Sample Profile for VoiceAttack, you will need to provide your own OpenAI account API key. This enables OpenAI to charge your account for OpenAI API usage, which is not free. New users may be able to access a trial period of 3 months with a $20 (USD) credit. In the extensive testing and development of this plugin, involving hundreds of calls to the OpenAI API, charges on my account did not rise over $1 (USD). That being said, my testing involved conversational completions which are much shorter than other ways ChatGPT and other features can be used.
+In order for the OpenAI Plugin to function, as well as the example commands in the included OpenAI Plugin Sample Profile for VoiceAttack, you will need to provide your own OpenAI account API key. This enables OpenAI to charge your account for OpenAI API usage, which is not free. New users may be able to access a trial period of 3 months with a $5 (USD) credit. In the extensive testing and development of this plugin, involving hundreds of calls to the OpenAI API, charges on my account did not rise over $1 (USD). That being said, my testing involved conversational completions which are much shorter than other ways ChatGPT and other features can be used.
 
 Dall-E images at the time of writing are between $0.016 and $0.02 (USD) per image, and could add up fast with careless use.  Monitor your usage frequently on your account, until you get an idea of what your regular use may cost on average. Please see notes below for Public Profile Developers who want their profiles to use OpenAI, and make sure your profile systems which may use AI for data or other purposes do not excessively call the API without informing your profile users of what sorts of calls they make and what sort of usage charges they may expect if using one or all of your AI powered profile systems.<br />
 <br />**Get your OpenAI API Key for your Account here:** <a href="https://platform.openai.com/account/api-keys">https://platform.openai.com/account/api-keys</a><br />
@@ -322,7 +322,7 @@ The `"What time is it?"` command has nothing to do with the OpenAI Plugin, and t
 
 ### Optional Profile Commands
 
-The `((OpenAI Initialize))` command is an example of how you can set certain variables each time your profile loads, and it is ***NEVER*** called by the plugin or required by any profile using OpenAI Plugin for VoiceAttack. The `((OpenAI DictationStart))` and `((OpenAI DictationStop))` commands allow you to create your own systems to handle these phases of a `ChatGPT` context plugin call, which also allows for an `((OpenAI ExternalResponder))` command which can be executed directly after OpenAI API responds and before re-entering a `WaitForProfile` phase (or the end of the plugin call, if not using a `.Session` context modifier). See more details in the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Creating-Public-Profiles">Creating Public Profiles</a> section below, incudling why these commands need their 'When I say' phrases edited if they will be used.
+The `((OpenAI Initialize))` command is an example of how you can set certain variables each time your profile loads, and it is ***NEVER*** called by the plugin or required by any profile using OpenAI Plugin for VoiceAttack. The `((OpenAI DictationStart))` and `((OpenAI DictationStop))` commands allow you to create your own systems to handle these phases of a `ChatGPT` context plugin call, which also allows for an `((OpenAI ExternalResponder))` command which can be executed directly after OpenAI API responds and before re-entering a `WaitForProfile` phase (or the end of the plugin call, if not using a `.Session` context modifier). See more details in the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Building-Public-Profiles">Building Public Profiles</a> section below, including why these commands need their 'When I say' phrases edited if they will be used.
 
 
 <br /><br />
@@ -456,7 +456,7 @@ Every function has been thoroughly tested, and most any exceptions or errors hav
 
 <br /><br />
 
-## When Things Catch Fire
+### When Things Catch Fire
 
 When all else fails, just restart VoiceAttack. This will reset any Global VoiceAttack Variables used by the plugin, and of course any internal variables the plugin has set from those values. I have included a utility command I've used for a long time which can be helpful to check the current value of any VoiceAttack variable and print it out to the Event Log. Say, `"Check a Variable Value"` to open a Get Choice window which will let you select a variable type to check, and then another to enter the name of the variable. Refer to the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables">All VoiceAttack Variables</a> page of this Wiki, and just copy/paste whatever you need to look up. You may also say the variable type in this utility command name such as, `"Check an Integer Variable Value"`. To easily set a value to a variable while you are building profiles using OpenAI Plugin or testing how it works, you can also say, `"Change a Variable Value"`, to access a similar menu to set a value to a variable - or including the variable type to set in the phrase. Use caution, but truly if something goes wrong, you can always just restart your profile (if you imported all the OpenAI Plugin Sample Profile commands), and things should return to normal. If not, create a new profile and import the commands, and copy parts of your defunct profile bit by bit until you discover what when wrong.
 <br /><br />
@@ -466,7 +466,7 @@ The <a href="https://voiceattack.com/VoiceAttackHelp.pdf">VoiceAttack Manual</a>
 
 <br /><br />
 
-## Understanding Error Logs
+### Understanding Error Logs
 
 <br />
 
@@ -479,7 +479,7 @@ Each error will be preceded by a timestamp and end with a line. There may be som
 <br /><br />
 
 
-## Additional Help
+### Additional Help
 
 I am happy to support this plugin and profile builders using it, contact me wherever is most convenient! I have a support channel at <a href="https://discord.gg/xDJUjYQked">VG Discord</a>, and you can also message me on the <a href="https://veterans-gaming.com/semlerpdx/contact/">Veterans-Gaming website</a>, the <a href="https://forum.voiceattack.com/">VoiceAttack forums</a>, or anywhere you see me lurking. If I'm not super busy, I'll work with you to help or point you in the right direction at the very least.
 

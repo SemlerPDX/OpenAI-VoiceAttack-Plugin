@@ -6,6 +6,7 @@ using System.Security;
 using System.Security.Permissions;
 using System.Windows;
 using System.Security.Principal;
+using System.Linq;
 
 namespace OpenAI_VoiceAttack_Plugin
 {
@@ -40,17 +41,17 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <br />Default Path:
         /// <br />"%AppData%\Roaming\OpenAI_VoiceAttack_Plugin"
         /// </summary>
-        public static string DEFAULT_CONFIG_FOLDER = System.IO.Path.Combine(
+        public static readonly string DEFAULT_CONFIG_FOLDER = System.IO.Path.Combine(
                                         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                         "OpenAI_VoiceAttack_Plugin");
 
         /// <summary>
-        /// The folder path to the captured audio files used for OpenAI Whisper
+        /// The folder path to the captured audio files used for OpenAI Whisper.
         /// </summary>
         public static readonly string DEFAULT_AUDIO_FOLDER = System.IO.Path.Combine(DEFAULT_CONFIG_FOLDER, "whisper");
 
         /// <summary>
-        /// The default file path to the captured audio file to use for OpenAI Whisper
+        /// The default file path to the captured audio file to use for OpenAI Whisper.
         /// </summary>
         public static readonly string DEFAULT_AUDIO_PATH = System.IO.Path.Combine(DEFAULT_AUDIO_FOLDER, "dictation_audio.wav");
 
@@ -66,10 +67,11 @@ namespace OpenAI_VoiceAttack_Plugin
         {
             try
             {
-
-                // Check if the application has elevated permissions
                 bool hasElevatedPermissions = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
-                if (!hasElevatedPermissions) { return false; }
+                if (!hasElevatedPermissions)
+                {
+                    return false;
+                }
 
                 FileIOPermission permission = new FileIOPermission(FileIOPermissionAccess.Write, filePath);
                 permission.Demand();
@@ -77,8 +79,10 @@ namespace OpenAI_VoiceAttack_Plugin
             }
             catch (SecurityException ex)
             {
-                if (OpenAIplugin.DEBUG_ACTIVE == true)
+                if (OpenAI_Plugin.DebugActive == true)
+                {
                     Logging.WriteToLog_Long($"The plugin has insufficient permissions for file operations: {ex.Message}", "red");
+                }
 
                 return false;
             }
@@ -93,7 +97,7 @@ namespace OpenAI_VoiceAttack_Plugin
                 "\n" +
                 " You must now restart VoiceAttack one final time." +
                 " You may also disable 'Run as Admin' now, if you prefer.",
-                OpenAIplugin.VA_DisplayName(),
+                OpenAI_Plugin.VA_DisplayName(),
                 MessageBoxButton.OK,
                 MessageBoxImage.Information
             );
@@ -102,23 +106,24 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <summary>
         /// The OpenAI Plugin requires the following files in the Shared\Assemblies folder of VoiceAttack, run only on first time installation.<br />
         /// This method ensures these files are present before the Plugin can be used, informing users to restart one last time when complete.<br />
-        /// <br />Will set <see cref="OpenAIplugin.OpenAI_PluginFirstUse"/> to <see langword="True"/> if these assembly files were not already in shared assemblies folder:
+        /// <br />Will set <see cref="OpenAI_Plugin.OpenAiPluginFirstUse"/> to <see langword="True"/> if these assembly files were not already in shared assemblies folder:
         /// <br /><br />
+        /// "Microsoft.Bcl.AsyncInterfaces.dll"<br />
         /// "Microsoft.Extensions.Options.dll"<br />
         /// "Microsoft.Extensions.Http.dll"<br />
         /// "Microsoft.Extensions.Primitives.dll"<br />
         /// "System.Threading.Tasks.Extensions.dll"<br />
         /// </summary>
-        public static bool CheckSharedAssemblies()
+        /// <returns>True when shared assemblies must be handled, false if all files are already in the folder.</returns>
+        public static bool SharedAssembliesMoved()
         {
             string sourcePath;
             string destinationPath;
-            string rootFolder = OpenAIplugin.VA_Proxy.AppsDir;
-            string sharedFolder = OpenAIplugin.VA_Proxy.AssembliesDir;
+            string rootFolder = OpenAI_Plugin.VA_Proxy.AppsDir;
+            string sharedFolder = OpenAI_Plugin.VA_Proxy.AssembliesDir;
 
-            CreateNewDirectory(sharedFolder);
+            CreateNewDirectory(sharedFolder, true);
 
-            // Array of required shared assemblies for OpenAI Plugin for VoiceAttack
             bool filesMoved = false;
             string[] assemblyNames = new[]
             {
@@ -129,31 +134,30 @@ namespace OpenAI_VoiceAttack_Plugin
                 "System.Threading.Tasks.Extensions.dll"
             };
 
-            // Check for and/or move files to Shared\Assemblies folder
             foreach (string assemblyName in assemblyNames)
             {
                 sourcePath = Path.Combine(rootFolder, "OpenAI_Plugin", "shared", assemblyName);
                 destinationPath = Path.Combine(sharedFolder, assemblyName);
 
-                if (!File.Exists(destinationPath))
+                if (File.Exists(destinationPath))
                 {
-                    if (OperationHasClearance(sharedFolder))
-                    {
-                        filesMoved = true;
-                        File.Copy(sourcePath, destinationPath);
-                    }
-                    else
-                    {
-                        OpenAIplugin.VA_Proxy.WriteToLog("OpenAI Plugin Error: Must run VoiceAttack 'as Admin' for first time installation - see wiki!", "red");
-                        return true;
-                    }
+                    continue;
                 }
+
+                if (!OperationHasClearance(sharedFolder))
+                {
+                    OpenAI_Plugin.VA_Proxy.WriteToLog("OpenAI Plugin Error: Must run VoiceAttack 'as Admin' for first time installation - see wiki!", "red");
+                    return true;
+                }
+
+                File.Copy(sourcePath, destinationPath);
+                filesMoved = true;
             }
 
-            // Inform of required restart only if files were added to Shared\Assemblies folder
+            // Inform of required VoiceAttack restart only if files were added to Shared\Assemblies folder.
             if (filesMoved)
             {
-                OpenAIplugin.OpenAI_PluginFirstUse = true;
+                OpenAI_Plugin.OpenAiPluginFirstUse = true;
                 ShowInstallationCompleteMessage();
             }
 
@@ -161,85 +165,55 @@ namespace OpenAI_VoiceAttack_Plugin
         }
 
         /// <summary>
-        /// A method to delete the old dictation audio files after use, because the action which
-        /// writes them cannot overwrite, and a new audio file is created each time, requiring cleanup.
-        /// </summary>
-        /// <returns>True when no audio folder exists to contain files, false if otherwise.</returns>
-        public static bool DeleteOldDictationAudio()
-        {
-            try
-            {
-                if (Directory.Exists(DEFAULT_AUDIO_FOLDER))
-                {
-                    string[] files = Directory.GetFiles(DEFAULT_AUDIO_FOLDER);
-                    if (files.Length > 0)
-                    {
-                        foreach (string file in files)
-                        {
-                            if (file.EndsWith(".wav") && OperationHasClearance(file))
-                                File.Delete(file);
-                        }
-                    }
-                    return false;
-                }
-            }
-            catch
-            {
-                // ...let it slide, the plugin command also runs this in an inline function when the call ends
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Create the folders required for OpenAI Plugin including the configuration and whisper folders
+        /// Create the folders required for OpenAI Plugin including the configuration and whisper folders.
         /// </summary>
         /// <param name="directoryPath">The path of the folder to be created.</param>
         /// <exception cref="Exception">Thrown when folder does not exist after attempt, or has insufficient permission to create, or other errors.</exception>
-        private static void CreateNewDirectory(string directoryPath)
+        private static void CreateNewDirectory(string directoryPath) { CreateNewDirectory(directoryPath, false); }
+        /// <summary>
+        /// Create the folders required for OpenAI Plugin including the configuration and whisper folders, or shared assemblies folder which would require elevated permissions.
+        /// </summary>
+        /// <param name="directoryPath">The path of the folder to be created.</param>
+        /// <param name="asAdmin">A boolean to indicate whether elevated permissions should be required to create a directory at the provided path.</param>
+        /// <exception cref="Exception">Thrown when folder does not exist after attempt, or has insufficient permission to create, or other errors.</exception>
+        private static void CreateNewDirectory(string directoryPath, bool asAdmin)
         {
-            try
+            if (System.IO.Directory.Exists(directoryPath))
             {
-                // Check if the folder path exists
-                if (!System.IO.Directory.Exists(directoryPath))
-                {
-                    System.IO.Directory.CreateDirectory(directoryPath);
-                    if (!System.IO.Directory.Exists(directoryPath))
-                    {
-                        throw new Exception($"Folder does not exist after attempting to create it at path: {directoryPath}");
-                    }
-                }
+                return;
             }
-            catch (Exception ex)
+
+            if (asAdmin && !OperationHasClearance(directoryPath))
             {
-                throw new Exception($"Failure to create new directory: {ex.Message}");
+                OpenAI_Plugin.VA_Proxy.WriteToLog("OpenAI Plugin Error: Must run VoiceAttack 'as Admin' for first time installation - see wiki!", "red");
+                throw new Exception($"OpenAI Plugin Error: Must run VoiceAttack 'as Admin' for first time installation - see wiki!");
+            }
+
+            System.IO.Directory.CreateDirectory(directoryPath);
+            if (!System.IO.Directory.Exists(directoryPath))
+            {
+                throw new Exception($"Folder does not exist after attempting to create it at path: {directoryPath}");
             }
         }
 
         /// <summary>
-        /// A method to create the required operational folders for this plugin to save captured audio files used in Whisper.
+        /// A method to create the required operational folders for this plugin to save captured audio files used in Whisper, etc.
         /// </summary>
         /// <param name="isFirstRun">A boolean indicating if this method should try creating config folders on first run.</param>
         /// <exception cref="Exception">Thrown if unabled to create required config folders - plugin will not be initialized.</exception>
-        public static void CreateConfigFolders(bool isFirstRun)
+        public static bool CreateConfigFolders(bool isFirstRun)
         {
-            try
-            {
-                string whisperFolder = System.IO.Path.Combine(DEFAULT_CONFIG_FOLDER, "whisper");
+            string whisperFolder = System.IO.Path.Combine(DEFAULT_CONFIG_FOLDER, "whisper");
 
-                // Try to create required config folders in AppData Roaming, throwing exceptions on failure
-                if (isFirstRun)
-                {
-                    CreateNewDirectory(DEFAULT_CONFIG_FOLDER);
-                    CreateNewDirectory(whisperFolder);
-                }
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Plugin_ConfigFolderPath", DEFAULT_CONFIG_FOLDER);
-                OpenAIplugin.VA_Proxy.SetText("OpenAI_Plugin_WhisperFolderPath", whisperFolder);
-            }
-            catch (Exception ex)
+            if (isFirstRun)
             {
-                OpenAIplugin.VA_Proxy.SetBoolean("OpenAI_Plugin_Initialized", false);
-                throw new Exception($"Failure creating Config Folders in AppData Roaming! {ex.Message}");
+                CreateNewDirectory(DEFAULT_CONFIG_FOLDER);
+                CreateNewDirectory(whisperFolder);
             }
+            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Plugin_ConfigFolderPath", DEFAULT_CONFIG_FOLDER);
+            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Plugin_WhisperFolderPath", whisperFolder);
+            
+            return true;
         }
 
     }
