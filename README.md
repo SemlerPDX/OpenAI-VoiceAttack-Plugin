@@ -41,24 +41,24 @@ This plugin also features OpenAI Moderation to review provided input and return 
 
 # Table of Contents
 
-- [Getting Started](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Getting-Started)
-  - [Download the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Download-the-Plugin)
-  - [Install the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Install-the-Plugin)
-    - [New Installation](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#New-Installation)
-    - [Update Installation](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Update-Installation)
-  - [Enable Plugin Support](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Enable-Plugin-Support)
-  - [Enter your OpenAI API Key](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Enter-your-Openai-Api-Key)
-  - [Uninstall the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Uninstall-the-Plugin)
-- [Using the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Using-the-Plugin)
-  - [Included Sample Profile](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Included-Sample-Profile)
-  - [Profile Commands Explained](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Profile-Commands-Explained)
-- [Creating Profiles using OpenAI Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Creating-Profiles-Using-Openai-Plugin)
-  - [Building Personal Profiles](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Building-Personal-Profiles)
-  - [Building Public Profiles](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Building-Public-Profiles)
-- [Troubleshooting](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Troubleshooting)
-  - [When Things Catch Fire](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#When-Things-Catch-Fire)
-  - [Understanding Error Logs](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Understanding-Error-Logs)
-  - [Additional Help](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Additional-Help)
+- [Getting Started](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#getting-started)
+  - [Download the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#download-the-plugin)
+  - [Install the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#install-the-plugin)
+    - [New Installation](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#new-installation)
+    - [Update Installation](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#update-installation)
+  - [Enable Plugin Support](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#enable-plugin-support)
+  - [Enter your OpenAI API Key](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#enter-your-openai-api-key)
+  - [Uninstall the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#uninstall-the-plugin)
+- [Using the Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#using-the-plugin)
+  - [Included Sample Profile](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#included-sample-profile)
+  - [Profile Commands Explained](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#profile-commands-explained)
+- [Creating Profiles using OpenAI Plugin](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#creating-profiles-using-openai-plugin)
+  - [Building Personal Profiles](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#building-personal-profiles)
+  - [Building Public Profiles](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#building-public-profiles)
+- [Troubleshooting](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#troubleshooting)
+  - [When Things Catch Fire](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#when-things-catch-fire)
+  - [Understanding Error Logs](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#understanding-error-logs)
+  - [Additional Help](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#additional-help)
 - [All VoiceAttack Variables](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables)
   - [Boolean 'State Changed' Variables (Special)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#boolean-state-changed-variables-special)
   - [Boolean Variables](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#boolean-variables)
@@ -191,7 +191,7 @@ Luckily, the update method is the same as the installation methods - files will 
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br /><br />
 
@@ -248,7 +248,7 @@ This OpenAI Plugin Configuration folder is located in `%AppData%\OpenAI_VoiceAtt
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br />
 
@@ -330,7 +330,7 @@ The `((OpenAI Initialize))` command is an example of how you can set certain var
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br /><br />
 
@@ -354,7 +354,7 @@ Finally, refer to the Plugin Context section of this Wiki to be sure you underst
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br />
 
@@ -397,7 +397,7 @@ If you prefer, you can optionally include the commands of the OpenAI Plugin Samp
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br /><br />
 
@@ -439,14 +439,14 @@ As stated above in the <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-
 
 **The current version inside the plugin can be read from the text variable:** <a href="https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki/All-VoiceAttack-Variables#openai_plugin_version">`OpenAI_Plugin_Version`</a><br />
 
-**The current version of this plugin can be scraped from the following page:** <br />
+**The current published version of this plugin can be scraped from the following page:** <br />
 <a href="https://veterans-gaming.com/semlerpdx/vglabs/downloads/voiceattack-plugin-openai/version.html">`https://veterans-gaming.com/semlerpdx/vglabs/downloads/voiceattack-plugin-openai/version.html`</a><br />
 
 <br />
 
 ---
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
 
 <br />
 
@@ -487,4 +487,4 @@ I am happy to support this plugin and profile builders using it, contact me wher
 
 <br />
 
- &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#Table-of-Contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
+ &nbsp; &nbsp; &nbsp; | &nbsp; [(table of contents)](https://github.com/SemlerPDX/OpenAI-VoiceAttack-Plugin/wiki#table-of-contents) &nbsp; | &nbsp; [(back to top)](#) &nbsp; |
