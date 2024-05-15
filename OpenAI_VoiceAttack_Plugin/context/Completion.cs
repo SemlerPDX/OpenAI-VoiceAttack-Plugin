@@ -32,52 +32,57 @@ namespace OpenAI_VoiceAttack_Plugin
     {
         /// <summary>
         /// Send a text completion request to the OpenAI API using the supplied input,
-        /// and return the completed text, using the specified parameters (optional).
+        /// and any specified parameters (optional).
+        /// <br /><br />
+        /// Returns the completed text within the VA text variable 'OpenAI_Response'.
         /// </summary>
         public static async Task CompleteText()
         {
-            try
+            string userInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput") ?? string.Empty;
+            string response = string.Empty;
+
+            if (string.IsNullOrEmpty(userInput))
             {
-                string userInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput") ?? string.Empty;
-                string response = string.Empty;
+                throw new Exception("User prompt in OpenAI_UserInput text variable is null or empty.");
+            }
 
-                if (string.IsNullOrEmpty(userInput)) { throw new Exception("User prompt in OpenAI_UserInput text variable is null or empty."); }
+            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_UserInput_Last", userInput);
 
-                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_UserInput_Last", userInput);
+            Model userModel = ModelsGPT.GetOpenAI_Model(true);
 
-                // Set the OpenAI GPT Model and any/all user options and create a new Completion request:
-                Model userModel = ModelsGPT.GetOpenAI_Model(true);
+            // Ensure max tokens in 'OpenAI_MaxTokens' is within range for the selected model, uses 512 if not set/invalid.
+            int userMaxTokens = ModelsGPT.GetValidMaxTokens(userModel);
 
-                // Ensure max tokens in 'OpenAI_MaxTokens' is within range for the selected model, uses 512 if not set/invalid
-                int userMaxTokens = ModelsGPT.GetValidMaxTokens(userModel);
+            decimal getTemp = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_Temperature") ?? 0.2M;
+            decimal getTopP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_TopP") ?? 0M;
+            decimal getFreqP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_FrequencyPenalty") ?? 0M;
+            decimal getPresP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_PresencePenalty") ?? 0M;
 
-                decimal getTemp = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_Temperature") ?? 0.2M;
-                decimal getTopP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_TopP") ?? 0M;
-                decimal getFreqP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_FrequencyPenalty") ?? 0M;
-                decimal getPresP = OpenAI_Plugin.VA_Proxy.GetDecimal("OpenAI_PresencePenalty") ?? 0M;
+            string getStopSequences = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_StopSequences") ?? string.Empty;
+            string[] userStopSequences = null;
+            if (!string.IsNullOrEmpty(getStopSequences))
+            {
+                userStopSequences = getStopSequences.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            }
 
-                string getStopSequences = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_StopSequences") ?? string.Empty;
-                string[] userStopSequences = null;
-                if (!string.IsNullOrEmpty(getStopSequences))
-                {
-                    userStopSequences = getStopSequences.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                }
+            int? userNumChoices = OpenAI_Plugin.VA_Proxy.GetInt("OpenAI_NumChoicesPerMessage") ?? 1;
+            double userTemperature = (double)getTemp;
+            double userTopP = (double)getTopP;
+            double userFrequencyPenalty = (double)getFreqP;
+            double userPresencePenalty = (double)getPresP;
 
-                int? userNumChoices = OpenAI_Plugin.VA_Proxy.GetInt("OpenAI_NumChoicesPerMessage") ?? 1;
-                double userTemperature = (double)getTemp;
-                double userTopP = (double)getTopP;
-                double userFrequencyPenalty = (double)getFreqP;
-                double userPresencePenalty = (double)getPresP;
-
-                OpenAIAPI api = OpenAI_Key.LoadKey
-                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
-                    : new OpenAIAPI(APIAuthentication.LoadFromPath(
+            OpenAIAPI api = OpenAI_Key.LoadKey
+                ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
+                : new OpenAIAPI(
+                    APIAuthentication.LoadFromPath(
                         directory: OpenAI_Key.DefaultKeyFileFolder,
                         filename: OpenAI_Key.DefaultKeyFilename,
                         searchUp: true
-                ));
+                    )
+                );
 
-                var result = await api.Completions.CreateCompletionAsync(new CompletionRequest(
+            var result = await api.Completions.CreateCompletionAsync(
+                new CompletionRequest(
                     userInput,
                     model: userModel,
                     temperature: userTemperature,
@@ -87,23 +92,19 @@ namespace OpenAI_VoiceAttack_Plugin
                     frequencyPenalty: userFrequencyPenalty,
                     presencePenalty: userPresencePenalty,
                     stopSequences: userStopSequences
-                ));
+                )
+            );
 
-                if (result != null && !string.IsNullOrEmpty(result.Completions.ToString()))
-                {
-                    //response = result.Completions.ToString();
-                    response = result.Completions[0].ToString();
-                }
-
-                if (!string.IsNullOrEmpty(response))
-                {
-                    OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
-                }
-            }
-            catch (Exception ex)
+            if (result != null && !string.IsNullOrEmpty(result.Completions.ToString()))
             {
-                throw new Exception($"OpenAI Plugin Error: {ex.Message}");
+                response = result.Completions[0].ToString();
+            }
+
+            if (!string.IsNullOrEmpty(response))
+            {
+                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
             }
         }
+
     }
 }

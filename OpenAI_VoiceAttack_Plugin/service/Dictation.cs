@@ -54,7 +54,7 @@ namespace OpenAI_VoiceAttack_Plugin
             }
             catch
             {
-                // ...let it slide, the plugin command also runs this in an inline function when the call ends
+                // ...let it slide, the plugin command also runs this in an inline function when the call ends.
             }
 
             return false;
@@ -190,8 +190,6 @@ namespace OpenAI_VoiceAttack_Plugin
                 {
                     return string.Empty;
                 }
-
-                /// NOTE: There should be an exit option here for ANY use of custom listen command, as it takes over ALL of GetInput!!
             }
 
             // Set default OR user custom 'Dictation Stop' if command exists in VoiceAttack profile, or empty string if none.
@@ -207,12 +205,13 @@ namespace OpenAI_VoiceAttack_Plugin
                 userInput = OpenAI_Plugin.VA_Proxy.ParseTokens("{DICTATION}") ?? string.Empty;
             }
 
+            // Returns early if custom profile DictationStart command had executed and set the userInput to be used.
             if (!string.IsNullOrEmpty(userInput) && OpenAI_Plugin.VA_Proxy.Command.Exists(listenCommand))
             {
                 return userInput;
             }
 
-
+            // Beginning default plugin DictationStart phase.
             if (sayPreListen && GetInputTimeout)
             {
                 ChatGPT.ProvideFeedback("OpenAI_TTS_PreListen", true);
@@ -304,7 +303,8 @@ namespace OpenAI_VoiceAttack_Plugin
                 Thread.Sleep(intervalMs);
 
                 index++;
-                if (OpenAI_Plugin.DebugActive == true && index % writeInterval == 0)
+                bool isDebugWriteInterval = index % writeInterval == 0;
+                if (OpenAI_Plugin.DebugActive == true && isDebugWriteInterval)
                 {
                     OpenAI_Plugin.VA_Proxy.WriteToLog("OpenAI ChatGPT is still waiting for user input to continue...", "yellow");
                 }

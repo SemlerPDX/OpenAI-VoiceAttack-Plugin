@@ -36,6 +36,24 @@ namespace OpenAI_VoiceAttack_Plugin
     /// </para>
     public static class Embedding
     {
+        // TOP_N of 990 == 1024 - 34 tokens of results prompt content instructions (not including the user input itself).
+        private static readonly int? DEFAULT_TOP_N = 990;
+        private static readonly int DEFAULT_TOP_K = 3;
+        private static readonly int DEFAULT_DIMENSIONALITY = 1536;
+        private static readonly float? DEFAULT_SIMILARITY = 0.825F;
+        private static readonly string DEFAULT_PROMPT = "If the data below is not relevant to the user input," +
+                                                        " ignore it and generate an appropriate answer based " +
+                                                        "solely on the user input.";
+
+        /// <summary>
+        /// NOTE: Dev Testing - property for tracking total calculations during a single operation.
+        /// </summary>
+        public static float CosineCalculations { get; set; } = 0;
+
+        /// <summary>
+        /// NOTE: Dev Testing - property for presenting total calculations from a single vector processing operation.
+        /// </summary>
+        public static string CalculationsMessage { get; set; } = string.Empty;
 
         /// <summary>
         /// A class to represent returned metadata from Embedding OpenAI API requests.
@@ -46,11 +64,14 @@ namespace OpenAI_VoiceAttack_Plugin
             /// The embeddings generated from the provided content with a dimensionality of 1,536 vectors.
             /// </summary>
             public List<float> Embeddings { get; set; }
+
             /// <summary>
             /// The total number of tokens consumed by the content used for embedding.
             /// </summary>
             public int TotalTokens { get; set; }
         }
+
+        ///NOTE: See private beta notes, already moved to SQL structure, all JSON references here need updating
         /// <summary>
         /// A class to represent each entry in a JSON embeddings metadata file.
         /// </summary>
@@ -60,22 +81,27 @@ namespace OpenAI_VoiceAttack_Plugin
             /// The zero based index of a given entry in the JSON file.
             /// </summary>
             public int Index { get; set; }
+
             /// <summary>
             /// The total tokens of the text content in a given entry.
             /// </summary>
             public int TextTokens { get; set; }
+
             /// <summary>
             /// The corresponding local file name the text content was taken from.
             /// </summary>
             public string FileName { get; set; }
+
             /// <summary>
             /// The text content of a given entry.
             /// </summary>
             public string TextContent { get; set; }
+
             /// <summary>
             /// The total number of embedding float vectors generated for the text content (must be 1536).
             /// </summary>
             public int EmbeddingDimensionality { get; set; }
+
             /// <summary>
             /// A list of L2 normalized embedding float vectors generated from the text content by OpenAI Embeddings API.
             /// </summary>
@@ -93,23 +119,60 @@ namespace OpenAI_VoiceAttack_Plugin
         public static EmbeddingEntry ExistingEntry { get; set; } = new EmbeddingEntry();
 
 
-        private static readonly string DEFAULT_PROMPT = "If the data below is not relevant to the user input, ignore it and generate an appropriate answer based solely on the user input.";
-        private static readonly float? DEFAULT_SIMILARITY = 0.825F;
-        private static readonly int DEFAULT_DIMENSIONALITY = 1536;
-        private static readonly int DEFAULT_TOP_K = 3;
-        private static readonly int? DEFAULT_TOP_N = 990;// 990 = 1024 - 34 tokens of results prompt content instructions (not including the user input itself)
 
         /// <summary>
-        /// NOTE: Dev Testing - property for tracking total calculations during a single operation
+        /// Send embedding request to OpenAI API to get a newline and "; " separated string containing returned Embedding vectors.
+        /// <br /><br />
+        /// Returns are set to the VA text variable 'OpenAI_EmbeddingResponse' as a semicolon
+        /// separated list of metadata including embedding vectors, or an empty string upon failure.
         /// </summary>
-        public static float CosineCalculations { get; set; } = 0;
+        public static async Task GetVectors()
+        {
+            string embeddingInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_EmbeddingInput") ?? string.Empty;
+            string response = string.Empty;
 
-        /// <summary>
-        /// NOTE: Dev Testing - property for presenting total calculations from a single vector processing operation
-        /// </summary>
-        public static string CalculationsMessage { get; set; } = string.Empty;
+            if (string.IsNullOrEmpty(embeddingInput))
+            {
+                throw new Exception("Embedding input in OpenAI_EmbeddingInput text variable is null or empty.");
+            }
 
+            // Redundant clearing of VA text variable in the event of unhandled exceptions.
+            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_EmbeddingResponse", string.Empty);
 
+            OpenAIAPI api = OpenAI_Key.LoadKey
+                ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
+                : new OpenAIAPI(
+                    APIAuthentication.LoadFromPath(
+                        directory: OpenAI_Key.DefaultKeyFileFolder,
+                        filename: OpenAI_Key.DefaultKeyFilename,
+                        searchUp: true
+                    )
+                );
+
+            ///NOTE: New models from OpenAI available, see notes - replace with VA variable and default model
+            var result = await api.Embeddings.CreateEmbeddingAsync(
+                new EmbeddingRequest(
+                    model: Model.AdaTextEmbedding,
+                    embeddingInput
+                )
+            );
+
+            if (result != null && result.Data != null && result.Data.Count > 0)
+            {
+                var embeddingList = result.Data;
+                if (embeddingList != null && embeddingList.Any())
+                {
+                    ///NOTE: During Embeddings Feature Dev and Refactoring, check validity of "; " versus ";"
+                    var embeddingStrings = embeddingList.Select(data => string.Join("; ", data.Embedding));
+                    response = string.Join(Environment.NewLine, embeddingStrings);
+                }
+            }
+
+            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_EmbeddingResponse", response);
+        }
+
+        ///NOTE: The following section (and some variables at top of class) relate to new WIP features in development May2024
+        #region beta_features_testing
         /// <summary>
         /// A method to read all contents of any file and return as string.
         /// </summary>
@@ -159,6 +222,7 @@ namespace OpenAI_VoiceAttack_Plugin
             return entries;
         }
 
+        ///NOTE: Is early test version of same method duplicated elsewhere in this class, see notes and import most recent version
         /// <summary>
         /// A method using cosine similarity to find the nearest embeddings in the JSON file based on the input embedding vectors, if any.
         /// </summary>
@@ -358,6 +422,7 @@ namespace OpenAI_VoiceAttack_Plugin
                         searchUp: false
                 ));
 
+                ///NOTE: New models from OpenAI available, see notes - replace with VA variable and default model
                 var embeddings = await api.Embeddings.CreateEmbeddingAsync(new EmbeddingRequest(
                     model: Model.AdaTextEmbedding,
                     content
@@ -438,47 +503,7 @@ namespace OpenAI_VoiceAttack_Plugin
 
             return result;
         }
-
-        /// <summary>
-        /// Send embedding request to OpenAI API to get a newline and "; " deliniated string containing returned Embedding vectors.
-        /// </summary>
-        /// <returns>The data will be stored in the 'OpenAI_Response' VoiceAttack text variable, empty on failure.</returns>
-        public static async Task Embed()
-        {
-            string embeddingInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_EmbeddingInput") ?? string.Empty;
-            string response = string.Empty;
-
-            if (string.IsNullOrEmpty(embeddingInput)) { throw new Exception("Embedding input in OpenAI_EmbeddingInput text variable is null or empty."); }
-
-            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_EmbeddingResponse", string.Empty);
-
-            OpenAIAPI api = OpenAI_Key.LoadKey
-                ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
-                : new OpenAIAPI(APIAuthentication.LoadFromPath(
-                    directory: OpenAI_Key.DefaultKeyFileFolder,
-                    filename: OpenAI_Key.DefaultKeyFilename,
-                    searchUp: true
-            ));
-
-
-            var result = await api.Embeddings.CreateEmbeddingAsync(new EmbeddingRequest(
-                model: Model.AdaTextEmbedding,
-                embeddingInput
-            ));
-
-            if (result != null && result.Data != null && result.Data.Count > 0)
-            {
-                var embeddingList = result.Data;
-                if (embeddingList != null && embeddingList.Any())
-                {
-                    var embeddingStrings = embeddingList.Select(data => string.Join("; ", data.Embedding));
-                    response = string.Join(Environment.NewLine, embeddingStrings);
-                }
-            }
-
-            // Return the embedding vectors as a string for post processing in VoiceAttack
-            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_EmbeddingResponse", response);
-        }
+        #endregion
 
     }
 }

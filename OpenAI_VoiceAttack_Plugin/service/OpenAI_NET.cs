@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 
 namespace OpenAI_VoiceAttack_Plugin
 {
@@ -29,7 +28,6 @@ namespace OpenAI_VoiceAttack_Plugin
     /// </para>
     public static class OpenAI_NET
     {
-
         /// <summary>
         /// Check if the OpenAI_NET companion app is running and therefore listening for Whisper and DALL-E requests.
         /// </summary>
@@ -67,7 +65,7 @@ namespace OpenAI_VoiceAttack_Plugin
             }
             catch
             {
-                //...let it slide and get out of Dodge
+                //...let it slide and get out of Dodge.
             }
         }
 

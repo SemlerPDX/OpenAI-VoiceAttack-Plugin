@@ -51,7 +51,7 @@ namespace OpenAI_VoiceAttack_Plugin
             }
             catch
             {
-                // ...log message, ignore, and continue
+                // ...log message, ignore, and continue.
                 Logging.WriteToLog_Long("OpenAI Plugin Error: was unable to open link to OpenAI website!", "red");
             }
         }
@@ -99,7 +99,7 @@ namespace OpenAI_VoiceAttack_Plugin
                 return;
             }
 
-            // Alternate save method - if API Key is provided before calling this context, save to file and exit form:
+            // Alternate save method - if API Key is provided before calling this context, save to file and exit form.
             string extKey = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_API_Key") ?? string.Empty;
             if (!string.IsNullOrEmpty(extKey))
             {
@@ -111,28 +111,24 @@ namespace OpenAI_VoiceAttack_Plugin
             OpenAI_Plugin.OpenAiKeyFormOpen = true;
             using (Form keyInputForm = new Form())
             {
-                // Get the existing key (if any)
                 string key = OpenAI_Key.LoadFromFile();
+
+                // Set window in center screen (from mouse) and to be always on top until closed.
+                keyInputForm.StartPosition = FormStartPosition.CenterScreen;
+                keyInputForm.TopMost = true;
                 keyInputForm.FormBorderStyle = FormBorderStyle.FixedSingle;
                 keyInputForm.MaximizeBox = false;
                 keyInputForm.MinimizeBox = false;
-
-                // Set the window in center screen (from mouse) and to be always on top until closed
-                keyInputForm.StartPosition = FormStartPosition.CenterScreen;
-                keyInputForm.TopMost = true;
-
-                // Form title text
+                keyInputForm.BackColor = Color.FromArgb(123, 123, 123);
                 keyInputForm.Text = OpenAI_Plugin.VA_DisplayName().Replace("API", "Plugin");
 
-                // Set form background color
-                keyInputForm.BackColor = Color.FromArgb(123, 123, 123);
-
-                // Form icon - voiceattack icon will look pretty and professional
+                // Form icon - voiceattack icon will look pretty and professional.
                 string iconPath = System.IO.Path.Combine(OpenAI_Plugin.VA_Proxy.InstallDir, "voiceattack.ico") ?? string.Empty;
                 if (!string.IsNullOrEmpty(iconPath) && File.Exists(iconPath))
                 {
                     keyInputForm.Icon = new Icon(iconPath);
                 }
+
                 keyInputForm.MinimumSize = new Size(400, keyInputForm.MinimumSize.Height);
 
                 System.Windows.Forms.Label spacer = new System.Windows.Forms.Label
@@ -152,12 +148,11 @@ namespace OpenAI_VoiceAttack_Plugin
                 textBox.TextAlign = HorizontalAlignment.Center;
                 textBox.Dock = DockStyle.Top;
 
-
                 System.Windows.Forms.Button okButton = new System.Windows.Forms.Button();
                 okButton.Text = "SAVE";
                 okButton.Font = new Font(okButton.Font, FontStyle.Bold);
                 okButton.Dock = DockStyle.Bottom;
-                okButton.DialogResult = DialogResult.OK;
+                okButton.DialogResult = DialogResult.OK; // using to indicate a save request.
                 okButton.FlatStyle = FlatStyle.Flat;
                 okButton.BackColor = Color.FromArgb(107, 107, 107);
                 okButton.FlatAppearance.BorderColor = Color.FromArgb(75, 75, 75);
@@ -168,7 +163,7 @@ namespace OpenAI_VoiceAttack_Plugin
                 deleteButton.Font = new Font(deleteButton.Font, FontStyle.Bold);
                 deleteButton.Dock = DockStyle.Bottom;
                 deleteButton.Location = new Point((keyInputForm.ClientSize.Width - okButton.Width) / 2, okButton.Location.Y);
-                deleteButton.DialogResult = DialogResult.Yes; // using to indicate a delete request
+                deleteButton.DialogResult = DialogResult.Yes; // using to indicate a delete request.
                 deleteButton.FlatStyle = FlatStyle.Flat;
                 deleteButton.BackColor = Color.FromArgb(107, 107, 107);
                 deleteButton.FlatAppearance.BorderColor = Color.FromArgb(75, 75, 75);
@@ -178,7 +173,7 @@ namespace OpenAI_VoiceAttack_Plugin
                 cancelButton.Text = "CANCEL";
                 cancelButton.Font = new Font(cancelButton.Font, FontStyle.Bold);
                 cancelButton.Dock = DockStyle.Bottom;
-                cancelButton.DialogResult = DialogResult.Cancel; // ignoring
+                cancelButton.DialogResult = DialogResult.Cancel; // ignoring.
                 cancelButton.FlatStyle = FlatStyle.Flat;
                 cancelButton.BackColor = Color.FromArgb(107, 107, 107);
                 cancelButton.FlatAppearance.BorderColor = Color.FromArgb(75, 75, 75);
@@ -209,10 +204,9 @@ namespace OpenAI_VoiceAttack_Plugin
                 keyInputForm.Controls.Add(label);
                 keyInputForm.Controls.Add(spacer);
 
-                // Bring the form to the foreground as 'always on top' until closed
+                // Bring the form to the foreground as 'always on top' until closed.
                 SetWindowPos(keyInputForm.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
 
-                // Show the form and get the result
                 DialogResult result = keyInputForm.ShowDialog();
 
                 if (result == DialogResult.OK)

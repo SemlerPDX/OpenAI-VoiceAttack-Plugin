@@ -135,47 +135,35 @@ namespace OpenAI_VoiceAttack_Plugin
         /// </exception>
         public static Model GetOpenAI_Model(bool completionModel)
         {
-            try
+            /// NOTE: new test for new 16k models - NOT GONNA WORK!!!
+            //string newModelName = CheckNewModels(completionModel);
+            //if (!string.IsNullOrEmpty(newModelName))
+            //    return null;
+
+            string modelName = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_Model")
+                               ?? (completionModel
+                                   ? DEFAULT_COMPLETION_MODEL_NAME
+                                   : DEFAULT_CHAT_MODEL_NAME);
+
+            if (completionModel)
             {
-                /// NOTE: new test for new 16k models - NOT GONNA WORK!!!
-                //string newModelName = CheckNewModels(completionModel);
-                //if (!string.IsNullOrEmpty(newModelName))
-                //    return null;
-
-                string modelName = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_Model") ?? (completionModel
-                    ? DEFAULT_CHAT_MODEL_NAME
-                    : DEFAULT_COMPLETION_MODEL_NAME);
-
-                if (completionModel)
+                if (!OpenAICompletionModels.Contains(modelName))
                 {
-                    if (!OpenAICompletionModels.Contains(modelName))
-                    {
-                        modelName = DEFAULT_COMPLETION_MODEL_NAME;
-                    }
-                }
-                else
-                {
-                    if (!OpenAIChatGPTmodels.Contains(modelName))
-                    {
-                        modelName = DEFAULT_CHAT_MODEL_NAME;
-                    }
-                }
-
-                if (OpenAImodels.TryGetValue(modelName, out Model model))
-                {
-                    // Use the "model" object corresponding to the name users provided
-                    return model;
+                    modelName = DEFAULT_COMPLETION_MODEL_NAME;
                 }
             }
-            catch (ArgumentNullException ex)
+            else
             {
-                Logging.WriteToLog_Long($"OpenAI Plugin Error in TryGetValue: {ex.Message}", "red");
-                OpenAI_Plugin.VA_Proxy.WriteToLog("The default 'ChatGPTTurbo' model will be used instead.", "blank");
+                if (!OpenAIChatGPTmodels.Contains(modelName))
+                {
+                    modelName = DEFAULT_CHAT_MODEL_NAME;
+                }
             }
-            catch (Exception ex)
+
+            if (OpenAImodels.TryGetValue(modelName, out Model model))
             {
-                Logging.WriteToLog_Long($"OpenAI Plugin Error: {ex.Message}", "red");
-                OpenAI_Plugin.VA_Proxy.WriteToLog("The default 'ChatGPTTurbo' model will be used instead.", "blank");
+                // UseS the "model" object corresponding to the name users provided.
+                return model;
             }
 
             // Handle the case where the user specified an unknown or invalid model name
@@ -223,20 +211,14 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <returns>An integer of max tokens to use which is no greater than the <see cref="Model"/> allows, or 512 if unset/invalid.</returns>
         public static int GetValidMaxTokens(Model gptModel)
         {
-            try
+            int maxTokens = OpenAI_Plugin.VA_Proxy.GetInt("OpenAI_MaxTokens") ?? 0;
+
+            if (MaxTokensByModel.TryGetValue(gptModel, out int maxAllowed) && maxTokens > maxAllowed)
             {
-                int maxTokens = OpenAI_Plugin.VA_Proxy.GetInt("OpenAI_MaxTokens") ?? 0;
-                if (MaxTokensByModel.TryGetValue(gptModel, out int maxAllowed) && maxTokens > maxAllowed)
-                {
-                    return maxAllowed;
-                }
-                return maxTokens > 0 ? maxTokens : 512;
+                return maxAllowed;
             }
-            catch (Exception ex)
-            {
-                Logging.WriteToLog_Long($"OpenAI Plugin Error: GetValidMaxTokens exception: {ex.Message}", "red");
-                return 512;
-            }
+
+            return maxTokens > 0 ? maxTokens : 512;
         }
 
     }

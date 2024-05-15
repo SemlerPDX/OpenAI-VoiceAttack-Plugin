@@ -35,7 +35,6 @@ namespace OpenAI_VoiceAttack_Plugin
         private static readonly string PluginVersionPage = "https://veterans-gaming.com/semlerpdx/vglabs/downloads/voiceattack-plugin-openai/version.html";
         private static readonly string PluginDownloadPage = "veterans-gaming.com/semlerpdx/openai";
 
-
         /// <summary>
         /// A string indicating the latest version of this plugin, changed if an update is found.
         /// </summary>
@@ -47,33 +46,27 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <returns>A string containing the latest version, or an empty string upon failure.</returns>
         private static string GetLatestVersion()
         {
-            try
+            string version = string.Empty;
+
+            using (var client = new WebClient())
             {
-                using (var client = new WebClient())
-                {
-                    string version = client.DownloadString(PluginVersionPage);
-                    return version.Trim();
-                }
+                version = client.DownloadString(PluginVersionPage);
             }
-            catch (Exception ex)
-            {
-                Logging.WriteToLog_Long($"OpenAI Plugin Error: {ex.Message}", "red");
-                return string.Empty;
-            }
+
+            return version.Trim();
         }
 
         /// <summary>
-        /// A very simple update check that runs one time when the plugin is loadeded by VoiceAttack in the <see cref="OpenAI_Plugin.VA_Init1(dynamic)"/> method..
+        /// A very simple update check that runs one time when the plugin is loadeded by 
+        /// VoiceAttack in the <see cref="OpenAI_Plugin.VA_Init1(dynamic)"/> method.
         /// </summary>
         /// <returns>True when update has been found, false if otherwise.</returns>
         public static bool UpdateCheck()
         {
             try
             {
-                // Get current version
                 string currentVersion = LatestVersion;
 
-                // Get latest version
                 string latestVersion = GetLatestVersion();
                 if (string.IsNullOrEmpty(latestVersion))
                 {
@@ -82,7 +75,6 @@ namespace OpenAI_VoiceAttack_Plugin
 
                 LatestVersion = latestVersion;
 
-                // Check if update notice should be shown
                 if (new Version(currentVersion) < new Version(latestVersion))
                 {
                     return true;
@@ -90,8 +82,9 @@ namespace OpenAI_VoiceAttack_Plugin
             }
             catch (Exception ex)
             {
-                Logging.WriteToLog_Long($"OpenAI Plugin Error: {ex.Message}", "red");
+                Logging.WriteToLog_Long($"OpenAI Plugin Update Error: {ex.Message}", "red");
             }
+
             return false;
         }
 
@@ -103,8 +96,6 @@ namespace OpenAI_VoiceAttack_Plugin
         {
             try
             {
-
-                // Get current version
                 string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
                 OpenAI_Plugin.VA_Proxy.WriteToLog("", "blank");
@@ -118,11 +109,10 @@ namespace OpenAI_VoiceAttack_Plugin
                     synthesizer.Rate = 1;
                     synthesizer.Speak("Please update the OpenAI Plugin for VoiceAttack to the latest version.");
                 }
-
             }
             catch (Exception ex)
             {
-                Logging.WriteToLog_Long($"OpenAI Plugin Error: {ex.Message}", "red");
+                Logging.WriteToLog_Long($"OpenAI Plugin Update Error: {ex.Message}", "red");
             }
         }
 

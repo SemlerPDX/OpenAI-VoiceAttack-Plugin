@@ -44,6 +44,7 @@ namespace OpenAI_VoiceAttack_Plugin
         public static async Task<string> GetUserInputAsync(string operation)
         {
             string userInput = string.Empty;
+
             await ProcessAudio(operation);
 
             if (OpenAI_Plugin.VA_Proxy.GetBoolean("OpenAI_Error") != true)
@@ -51,34 +52,37 @@ namespace OpenAI_VoiceAttack_Plugin
                 userInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_Response") ?? string.Empty;
                 OpenAI_Plugin.VA_Proxy.SetText("OpenAI_UserInput", userInput);
             }
+
             return userInput;
         }
 
         /// <summary>
         /// Transcribe audio into text using OpenAI Whisper.
+        /// <br /><br />
+        /// Returns are set to the VA text variable 'OpenAI_Response' as a string that contains
+        /// the transcribed text if successful, or an error message if the operation fails.
         /// </summary>
-        /// <returns>
-        /// Sets the OpenAI_Response text variable to a string that contains the transcribed if successful,
-        /// or an error message if the operation fails.</returns>
         public static Task ProcessAudio() { return ProcessAudio("transcribe"); }
         /// <summary>
         /// Transcribe audio into text or Translate non-English audio into English text using OpenAI Whisper.
+        /// <br /><br />
+        /// Returns are set to the VA text variable 'OpenAI_Response' as a string that contains
+        /// the transcribed text if successful, or an error message if the operation fails.
         /// </summary>
         /// <param name="operation">The type of operation to perform, either "transcribe" or "translate".</param>
-        /// <returns>
-        /// Sets the OpenAI_Response text variable to a string that contains the transcribed or translated text if successful,
-        /// or an error message if the operation fails.</returns>
         public static Task ProcessAudio(string operation)
         {
-            string audioFilePath = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_AudioPath") ??
-                                    (OpenAI_Plugin.VA_Proxy.GetText("OpenAI_AudioFile") ??
-                                    Configuration.DEFAULT_AUDIO_PATH);
+            string audioFilePath = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_AudioPath")
+                                    ?? (OpenAI_Plugin.VA_Proxy.GetText("OpenAI_AudioFile")
+                                        ?? Configuration.DEFAULT_AUDIO_PATH);
 
             string response = DefaultErrorMessage;
             
-            int timeoutMs = 5000; // 5 second timeout
+            // Default is 5 second timeout for audio file to appear.
+            int timeoutMs = 5000;
             int intervalMs = 100;
             DateTime startTime = DateTime.Now;
+
             while (!System.IO.File.Exists(audioFilePath))
             {
                 if ((DateTime.Now - startTime).TotalMilliseconds >= timeoutMs)

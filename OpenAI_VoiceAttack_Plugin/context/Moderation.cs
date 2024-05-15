@@ -30,93 +30,106 @@ namespace OpenAI_VoiceAttack_Plugin
     /// </para>
     public static class Moderation
     {
+        private static readonly string DEFAULT_FLAGGED_TTS_MESSAGE = "The input provided has been flagged as inappropriate.";
+
         /// <summary>
         /// A method to use OpenAI Moderation API to check user input text, and
         /// to provide the flagged categories which apply (if any).
+        /// <br /><br />
+        /// Return is set to the 'OpenAI_ContentFlagged' boolean variable as <see langword="true"/> if content was flagged,
+        /// or as <see langword="false"/> if not flagged.
+        /// <br />Also sets the 'OpenAI_Response' text variable to a string of flagged categories formatted for TTS,
+        /// or to the original user input (unmodified) if not flagged.
         /// </summary>
-        /// <returns>Sets the OpenAI_ContentFlagged boolean variable <see langword="true"/> if content was flagged, or <see langword="false"/> if not flagged.
-        /// <br />Also sets the OpenAI_Response text variable to a string of flagged categories formatted for TTS,
-        /// or to the original user input (unmodified) if not flagged.</returns>
         public static async Task Explain()
         {
             string userInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput") ?? string.Empty;
             string categoriesString = string.Empty;
             OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", false);
 
-            if (!string.IsNullOrEmpty(userInput))
+            if (string.IsNullOrEmpty(userInput))
             {
-                OpenAIAPI api = OpenAI_Key.LoadKey
-                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
-                    : new OpenAIAPI(APIAuthentication.LoadFromPath(
+                throw new Exception("Moderation text in OpenAI_UserInput text variable is null or empty.");
+            }
+
+            OpenAIAPI api = OpenAI_Key.LoadKey
+                ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
+                : new OpenAIAPI(
+                    APIAuthentication.LoadFromPath(
                         directory: OpenAI_Key.DefaultKeyFileFolder,
                         filename: OpenAI_Key.DefaultKeyFilename,
                         searchUp: true
-                ));
+                    )
+                );
 
-                var result = await api.Moderation.CallModerationAsync(userInput);
+            var result = await api.Moderation.CallModerationAsync(userInput);
 
+            if (result.Results[0].Flagged)
+            {
+                var flaggedCategories = result.Results[0].FlaggedCategories.ToList();
 
-                if (result.Results[0].Flagged)
+                // Format any flagged categories for use in Text-to-Speech:
+                if (flaggedCategories.Count == 1)
                 {
-                    var flaggedCategories = result.Results[0].FlaggedCategories.ToList();
-
-
-                    // Format any flagged categories for use in Text-to-Speech:
-                    if (flaggedCategories.Count == 1)
-                    {
-                        categoriesString = flaggedCategories[0];
-                    }
-                    else if (flaggedCategories.Count == 2)
-                    {
-                        categoriesString = $"{flaggedCategories[0]} and {flaggedCategories[1]}";
-                    }
-                    else
-                    {
-                        categoriesString = $"{string.Join(", ", flaggedCategories.Take(flaggedCategories.Count - 1))}, and {flaggedCategories.Last()}";
-                    }
-
+                    categoriesString = flaggedCategories[0];
+                }
+                else if (flaggedCategories.Count == 2)
+                {
+                    categoriesString = $"{flaggedCategories[0]} and {flaggedCategories[1]}";
+                }
+                else
+                {
+                    categoriesString = $"{string.Join(", ", flaggedCategories.Take(flaggedCategories.Count - 1))}, and {flaggedCategories.Last()}";
                 }
 
-                string response = result.Results[0].Flagged ? categoriesString : OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput");
-                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
-                OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", result.Results[0].Flagged);
             }
+
+            string response = result.Results[0].Flagged ? categoriesString : OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput");
+            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
+            OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", result.Results[0].Flagged);
         }
 
         /// <summary>
         /// A boolean method to use OpenAI Moderation API to check user input text.
+        /// <br /><br />
+        /// Return is set to the 'OpenAI_ContentFlagged' boolean variable (and returns) <see langword="true"/> 
+        /// if content was flagged, or <see langword="false"/> if not flagged.
+        /// <br />Also sets the 'OpenAI_Response' text variable to a message stating input was inappropriate, or to the
+        /// original user input (unmodified) if not flagged.
         /// </summary>
-        /// <returns>Sets the OpenAI_ContentFlagged boolean variable (and returns) <see langword="true"/> if content was flagged, or <see langword="false"/> if not flagged.
-        /// <br />Also sets the OpenAI_Response text variable to a message stating input was inappropriate, or to the
-        /// original user input (unmodified) if not flagged.</returns>
         public static async Task<bool> Check()
         {
             string userInput = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput") ?? string.Empty;
-            string flagMessage = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_TTS_ContentFlagged") ?? "The input provided has been flagged as inappropriate.";
+            string flagMessage = OpenAI_Plugin.VA_Proxy.GetText("OpenAI_TTS_ContentFlagged") ?? DEFAULT_FLAGGED_TTS_MESSAGE;
+
             OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", false);
 
-            if (!string.IsNullOrEmpty(userInput))
+            if (string.IsNullOrEmpty(userInput))
             {
-                OpenAIAPI api = OpenAI_Key.LoadKey
-                    ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
-                    : new OpenAIAPI(APIAuthentication.LoadFromPath(
+                Logging.WriteToLog_Long("OpenAI Plugin Error: Moderation text in OpenAI_UserInput text variable is null or empty.", "red");
+                return false;
+            }
+
+            OpenAIAPI api = OpenAI_Key.LoadKey
+                ? new OpenAIAPI(new APIAuthentication(OpenAI_Key.ApiKey, OpenAI_Key.ApiOrg))
+                : new OpenAIAPI(
+                    APIAuthentication.LoadFromPath(
                         directory: OpenAI_Key.DefaultKeyFileFolder,
                         filename: OpenAI_Key.DefaultKeyFilename,
                         searchUp: true
-                ));
+                    )
+                );
 
-                var result = await api.Moderation.CallModerationAsync(userInput);
+            var result = await api.Moderation.CallModerationAsync(userInput);
 
-                string response = result.Results[0].Flagged
-                    ? flagMessage
-                    : OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput");
+            string response = result.Results[0].Flagged
+                            ? flagMessage
+                            : OpenAI_Plugin.VA_Proxy.GetText("OpenAI_UserInput");
 
-                OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
-                OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", result.Results[0].Flagged);
+            OpenAI_Plugin.VA_Proxy.SetText("OpenAI_Response", response);
+            OpenAI_Plugin.VA_Proxy.SetBoolean("OpenAI_ContentFlagged", result.Results[0].Flagged);
 
-                return result.Results[0].Flagged;
-            }
-            return false;
+            return result.Results[0].Flagged;
         }
 
     }

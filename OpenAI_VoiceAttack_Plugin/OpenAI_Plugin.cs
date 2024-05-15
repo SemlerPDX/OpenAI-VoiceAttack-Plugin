@@ -377,7 +377,7 @@ namespace OpenAI_VoiceAttack_Plugin
             { "file.upload", () => Files.Upload() },
             { "file.list", () => Files.List() },
             { "file.delete", () => Files.Delete() },
-            { "embedding", () => Embedding.Embed() }
+            { "embedding", () => Embedding.GetVectors() }
         };
 
         private static async void PluginContext(dynamic vaProxy)

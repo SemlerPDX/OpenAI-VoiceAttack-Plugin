@@ -57,7 +57,7 @@ namespace OpenAI_VoiceAttack_Plugin
         /// <exception cref="InvalidOperationException">Thrown when an error occurs in Connect().</exception>
         public static bool SendArgsToNamedPipe(string[] args)
         {
-            if (args == null || args.Length == 0 || args.Length < 3)
+            if (args == null || args.Length < 3)
             {
                 throw new Exception($"The {PIPE_NAME_THIS} arguments array must contain at least three elements.");
             }
