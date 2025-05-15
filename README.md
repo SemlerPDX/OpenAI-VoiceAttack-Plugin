@@ -216,8 +216,8 @@ In order for the OpenAI Plugin to function, as well as the example commands in t
 In order for the OpenAI Plugin to function, as well as the example commands in the included OpenAI Plugin Sample Profile for VoiceAttack, you will need to provide your own OpenAI account API key. This enables OpenAI to charge your account for OpenAI API usage, which is not free. New users may be able to access a trial period of 3 months with a $5 (USD) credit. In the extensive testing and development of this plugin, involving hundreds of calls to the OpenAI API, charges on my account did not rise over $1 (USD). That being said, my testing involved conversational completions which are much shorter than other ways ChatGPT and other features can be used.
 
 Dall-E images at the time of writing are between $0.016 and $0.02 (USD) per image, and could add up fast with careless use.  Monitor your usage frequently on your account, until you get an idea of what your regular use may cost on average. Please see notes below for Public Profile Developers who want their profiles to use OpenAI, and make sure your profile systems which may use AI for data or other purposes do not excessively call the API without informing your profile users of what sorts of calls they make and what sort of usage charges they may expect if using one or all of your AI powered profile systems.<br />
-<br />**Get your OpenAI API Key for your Account here:** <a href="https://platform.openai.com/account/api-keys">https://platform.openai.com/account/api-keys</a><br />
-<br />**Learn more about Pricing and Costs here:** <a href="https://openai.com/pricing">https://openai.com/pricing</a><br />
+<br />**Get your OpenAI API Key for your Account here:** <a href="https://platform.openai.com/settings/organization/api-keys">https://platform.openai.com/settings/organization/api-keys</a><br />
+<br />**Learn more about Pricing and Costs here:** <a href="https://platform.openai.com/docs/pricing">https://platform.openai.com/docs/pricing</a><br />
 <br />
 
 
